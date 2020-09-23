@@ -166,7 +166,7 @@ class _AccountPageState extends State<AccountPage> {
   signIn(String login, String password) async {
     var data = {'login': login, 'password': password};
 
-    var resp = await http.post("https://api.unmei.space/v1/auth/login", body: data);
+    var resp = await http.post("https://api.unmei.space/v1/auth/login", body: jsonEncode(data));
     if (resp.statusCode == 200) {
       var jsonData = json.decode(resp.body);
       setState(() {
