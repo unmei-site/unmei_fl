@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:unmei_fl/model/json_model.dart';
 import 'package:unmei_fl/page/novel_item_page.dart';
+import 'package:unmei_fl/utils.dart';
 
 class NovelCard extends StatelessWidget {
   final Novels novelsList;
@@ -37,7 +38,12 @@ class NovelCard extends StatelessWidget {
               ),
               Text(
                 "${novelsList.data[index].originalName}",
-                style: TextStyle(fontWeight: FontWeight.w500, fontSize: 22),
+                style: TextStyle(
+                    fontWeight:
+                    FontWeight.w500,
+                    fontSize: 22,
+                    color: onThemeON(context, Colors.white, Colors.black),
+                ),
               ),
             ],
           ),

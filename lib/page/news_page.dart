@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:unmei_fl/api/API.dart';
+import 'package:unmei_fl/model/json_model.dart';
 import 'package:unmei_fl/widget/news_item_widget.dart';
 
 import '../utils.dart';
@@ -22,7 +24,17 @@ class NewsPage extends StatelessWidget {
                 topRight: Radius.circular(30),
               ),
             ),
-            child: NewsItem(),
+            child: Container(
+              width: double.infinity,
+              height: MediaQuery.of(context).size.height,
+              child: FutureBuilder<News>(
+                future: fetchNewsData(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasError) print(snapshot.error);
+                  return snapshot.hasData ? NewsItem(newsList: snapshot.data) : NewsItemShimmer();
+                },
+              ),
+            )
           ),
         ],
       ),

@@ -1,4 +1,5 @@
 import 'package:intl/intl.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -31,3 +32,14 @@ pageHeader(String text, Color color) => Container(
 
 onThemeON(BuildContext context, Color dark, Color light) =>
     context.watch<DataApp>().changeThemeData ? dark : light;
+
+onShim(double height, double width, EdgeInsets margin) => Shimmer.fromColors(
+  baseColor: Colors.grey,
+  highlightColor: Colors.grey[200],
+  child: Container(
+    margin: margin,
+    height: height,
+    width: width,
+    color: Colors.white,
+  ),
+);

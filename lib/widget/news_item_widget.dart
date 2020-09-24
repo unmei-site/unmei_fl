@@ -1,116 +1,92 @@
 import 'package:flutter/material.dart';
-import 'package:unmei_fl/api/API.dart';
 import 'package:unmei_fl/model/json_model.dart';
 
 import '../utils.dart';
 
-class NewsItem extends StatefulWidget {
+class NewsItem extends StatelessWidget {
 
-  @override
-  _NewsItemState createState() => _NewsItemState();
-}
+  final News newsList;
 
-class _NewsItemState extends State<NewsItem> {
-
-  var _newsList = News();
-  var _newsListDisplay = News();
-
-  @override
-  void initState() {
-    fetchNewsData().then((value) {
-      setState(() {
-        _newsList.data = [];
-        _newsList.data.addAll(value.data);
-        _newsListDisplay.data = _newsList.data;
-      });
-    });
-    super.initState();
-  }
+  const NewsItem({Key key, this.newsList}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      height: MediaQuery.of(context).size.height,
-      child: ListView.builder(
-        itemCount: _newsList.data == null ? 0 : _newsList.data.length,
-        itemBuilder: (context, index) {
-          return Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(10)),
-              color: onThemeON(context, Color(0xFF333333), Colors.blue[100]),
-              border: Border.all(
-                style: BorderStyle.solid,
-                color: onThemeON(context, Color(0xFF121212), Colors.blueAccent),
-                width: 2,
+    return ListView.builder(
+      itemCount: newsList.data.length,
+      itemBuilder: (context, index) =>  Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.all(Radius.circular(10)),
+          color: onThemeON(context, Color(0xFF333333), Colors.blue[100]),
+          border: Border.all(
+            style: BorderStyle.solid,
+            color: onThemeON(context, Color(0xFF121212), Colors.blueAccent),
+            width: 2,
+          ),
+        ),
+        margin: const EdgeInsets.all(25),
+        child: Column(
+          children: <Widget>[
+            Container(
+              width: double.infinity,
+              margin: const EdgeInsets.only(left: 20, top: 5),
+              child: Text(
+                "${newsList.data[index].title}",
+                textAlign: TextAlign.left,
+                style: TextStyle(
+                    fontWeight: FontWeight.w700,
+                    fontSize: 20,
+                    color: onThemeON(context, Colors.white, Colors.black)
+                ),
               ),
             ),
-            margin: const EdgeInsets.all(25),
-            child: Column(
-              children: <Widget>[
-                Container(
-                  width: double.infinity,
-                  margin: const EdgeInsets.only(left: 20, top: 5),
-                  child: Text(
-                    "${_newsList.data[index].title}",
-                    textAlign: TextAlign.left,
-                    style: TextStyle(
-                      fontWeight: FontWeight.w700,
-                      fontSize: 20,
-                      color: onThemeON(context, Colors.white, Colors.black)
-                    ),
-                  ),
-                ),
-                setLine(context),
-                Container(
-                  margin: const EdgeInsets.only(
-                      top: 5, bottom: 5, left: 10),
-                  child: Text(
-                    "${_newsList.data[index].shortPost}",
-                    style: TextStyle(fontSize: 14, color: onThemeON(context, Colors.white, Colors.black)),
-                  ),
-                ),
-                setLine(context),
-                Container(
-                  margin: const EdgeInsets.all(5),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            setLine(context),
+            Container(
+              margin: const EdgeInsets.only(
+                  top: 5, bottom: 5, left: 10),
+              child: Text(
+                "${newsList.data[index].shortPost}",
+                style: TextStyle(fontSize: 14, color: onThemeON(context, Colors.white, Colors.black)),
+              ),
+            ),
+            setLine(context),
+            Container(
+              margin: const EdgeInsets.all(5),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Row(
                     children: <Widget>[
-                      Row(
-                        children: <Widget>[
-                          Icon(
-                            Icons.date_range,
-                            color: onThemeON(context, Colors.white, Colors.blueAccent),
-                            size: 20.0,
-                          ),
-                          Text(
-                            " ${setDateTimeFull(_newsList.data[index].date, 3)}",
-                            style: TextStyle(
-                                fontSize: 14, color: onThemeON(context, Colors.white, Colors.black)),
-                          ),
-                        ],
+                      Icon(
+                        Icons.date_range,
+                        color: onThemeON(context, Colors.white, Colors.blueAccent),
+                        size: 20.0,
                       ),
-                      Row(
-                        children: <Widget>[
-                          Icon(
-                            Icons.border_color,
-                            color: onThemeON(context, Colors.white, Colors.blueAccent),
-                            size: 18.0,
-                          ),
-                          Text(
-                            " ${_newsList.data[index].author}",
-                            style: TextStyle(
-                                fontSize: 14, color: onThemeON(context, Colors.white, Colors.black)),
-                          ),
-                        ],
+                      Text(
+                        " ${setDateTimeFull(newsList.data[index].date, 3)}",
+                        style: TextStyle(
+                            fontSize: 14, color: onThemeON(context, Colors.white, Colors.black)),
                       ),
                     ],
                   ),
-                ),
-              ],
+                  Row(
+                    children: <Widget>[
+                      Icon(
+                        Icons.border_color,
+                        color: onThemeON(context, Colors.white, Colors.blueAccent),
+                        size: 18.0,
+                      ),
+                      Text(
+                        " ${newsList.data[index].author}",
+                        style: TextStyle(
+                            fontSize: 14, color: onThemeON(context, Colors.white, Colors.black)),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
-          );
-        },
+          ],
+        ),
       ),
     );
   }
@@ -122,4 +98,22 @@ class _NewsItemState extends State<NewsItem> {
     color: onThemeON(context, Colors.white, Colors.black),
   );
 }
+
+class NewsItemShimmer extends StatelessWidget {
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.all(25),
+      child: ListView.builder(
+        itemCount: 10,
+        itemBuilder: (context, index) => Container(
+          margin: const EdgeInsets.only(bottom: 20),
+          child: onShim(120, 0, null),
+        ),
+      ),
+    );
+  }
+}
+
 
