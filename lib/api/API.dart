@@ -15,7 +15,6 @@ Future<Novels> fetchNovelData() async {
 
 Future<News> fetchNewsData() async {
   final response = await http.get('https://api.unmei.space/v1/news');
-
   if (response.statusCode == 200) {
     return News.fromJson(jsonDecode(response.body));
   } else {
