@@ -1,19 +1,12 @@
-import 'dart:io';
-
-import 'package:cookie_jar/cookie_jar.dart';
-import 'package:dio/dio.dart';
-import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:unmei_fl/widget/utils_widget.dart';
 
 import '../data.dart';
 import '../utils.dart';
-
-import 'dart:convert';
-import 'package:http/http.dart' as http;
 
 class AccountPage extends StatefulWidget {
   @override
@@ -43,7 +36,8 @@ class _AccountPageState extends State<AccountPage> {
               color: onThemeON(context, Color(0xFF1f1f1f), Colors.green),
               child: ListView(
                 children: <Widget>[
-                  pageHeader("Аккаунт", onThemeON(context, Color(0xFF1f6b22), Colors.white)),
+                  pageHeader("Аккаунт",
+                      onThemeON(context, Color(0xFF1f6b22), Colors.white)),
                   accBody(),
                 ],
               ),
@@ -95,7 +89,8 @@ class _AccountPageState extends State<AccountPage> {
 
                   //BUTTON
                   Container(
-                    margin: const EdgeInsets.only(bottom: 10, left: 40, right: 40, top: 10),
+                    margin: const EdgeInsets.only(
+                        bottom: 10, left: 40, right: 40, top: 10),
                     height: 40,
                     width: double.infinity,
                     child: SizedBox(
@@ -107,12 +102,16 @@ class _AccountPageState extends State<AccountPage> {
                             setState(() {
                               _isLoading = true;
                             });
-                            signIn(loginController.text, passwordController.text);
+                            signIn(
+                                loginController.text, passwordController.text);
                           },
-                          color: onThemeON(context, Color(0xFF333333), Colors.white),
+                          color: onThemeON(
+                              context, Color(0xFF333333), Colors.white),
                           child: Text(
                             "Войти",
-                            style: TextStyle(color: onThemeON(context, Colors.white, Colors.black)),
+                            style: TextStyle(
+                                color: onThemeON(
+                                    context, Colors.white, Colors.black)),
                           ),
                         ),
                       ),
@@ -132,22 +131,28 @@ class _AccountPageState extends State<AccountPage> {
                               onPressed: () {
                                 launchURL("https://unmei.space/");
                               },
-                              color: onThemeON(context, Color(0xFF333333), Colors.white),
+                              color: onThemeON(
+                                  context, Color(0xFF333333), Colors.white),
                               child: Text(
                                 "Регистрация",
-                                style: TextStyle(color: onThemeON(context, Colors.white, Colors.black)),
+                                style: TextStyle(
+                                    color: onThemeON(
+                                        context, Colors.white, Colors.black)),
                               ),
                             ),
                           ),
                         ),
                         CircleAvatar(
-                          backgroundColor: onThemeON(context, Color(0xFF333333), Colors.white),
+                          backgroundColor: onThemeON(
+                              context, Color(0xFF333333), Colors.white),
                           child: IconButton(
                             color: Colors.black,
                             onPressed: () {
                               launchURL("https://unmei.space/restore");
                             },
-                            icon: Icon(Icons.lock_open, color: onThemeON(context, Colors.white, Colors.black)),
+                            icon: Icon(Icons.lock_open,
+                                color: onThemeON(
+                                    context, Colors.white, Colors.black)),
                           ),
                         ),
                       ],
@@ -195,34 +200,12 @@ class _AccountPageState extends State<AccountPage> {
   final passwordController = TextEditingController();
 
   signIn(String login, String password) async {
-    var data = {'login': login, 'password': password};
     var sharedPref = await SharedPreferences.getInstance();
-
-    var dio = Dio();
-    // dio.interceptors.add(InterceptorsWrapper(onRequest: (options) async {
-    //   var customHeaders = {
-    //     'content-type': 'application/json'
-    //   };
-    //   options.headers.addAll(customHeaders);
-    //   return options;
-    // }));
-    var response = await dio.post("https://api.unmei.space/v1/auth/login", data: jsonEncode(data));
-    print(response.headers.value('token'));
-
-    if (response.statusCode == 200) {
-      setState(() => _isLoading = false);
-
-      print(sharedPref.getString("token"));
-      Navigator.of(context)
-          .push(MaterialPageRoute(builder: (context) => UserAccount()));
-    } else {
-      setState(() => _isLoading = false);
-      print(response.data);
-    }
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) => UserAccount()));
+    // print(await fetchUser(login, password));
   }
 
-  textInput(String text, bool hideText, IconData icon, TextEditingController controller) =>
-      Container(
+  textInput(String text, bool hideText, IconData icon, TextEditingController controller) => Container(
         margin: const EdgeInsets.only(top: 10, left: 40, right: 40),
         height: 40,
         width: double.infinity,
@@ -261,7 +244,6 @@ class _AccountPageState extends State<AccountPage> {
 }
 
 class UserAccount extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -307,25 +289,21 @@ class UserAccount extends StatelessWidget {
                         Text(
                           "Username",
                           style: TextStyle(
-                            fontSize: 22,
-                            fontWeight: FontWeight.w500
-                          ),
+                              fontSize: 22, fontWeight: FontWeight.w500),
                         ),
                         Container(
                           padding: const EdgeInsets.all(5),
                           decoration: BoxDecoration(
-                            border: Border.all(
-                              style: BorderStyle.solid,
-                              width: 1,
-                              color: Colors.blue
-                            )
-                          ),
+                              border: Border.all(
+                                  style: BorderStyle.solid,
+                                  width: 1,
+                                  color: Colors.blue)),
                           child: Text(
                             "Stuff",
                             style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.w500,
-                                color: Colors.blue,
+                              fontSize: 20,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.blue,
                             ),
                           ),
                         ),
@@ -341,42 +319,24 @@ class UserAccount extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    Column(
-                      children: [
-                        Icon(Icons.assistant_photo, size: 40, color: Color(0xFF399999)),
-                        Text("0", style: TextStyle(fontSize: 22)),
-                      ],
-                    ),
-                    Column(
-                      children: [
-                        Icon(Icons.check, size: 40, color: Color(0xFF339933)),
-                        Text("0", style: TextStyle(fontSize: 22)),
-                      ],
-                    ),
-                    Column(
-                      children: [
-                        Icon(Icons.av_timer, size: 40, color: Color(0xFF993399)),
-                        Text("0", style: TextStyle(fontSize: 22)),
-                      ],
-                    ),
-                    Column(
-                      children: [
-                        Icon(Icons.ac_unit, size: 40, color: Color(0xFF51d4ff)),
-                        Text("0", style: TextStyle(fontSize: 22)),
-                      ],
-                    ),
-                    Column(
-                      children: [
-                        Icon(Icons.not_interested, size: 40, color: Color(0xFF993333)),
-                        Text("0", style: TextStyle(fontSize: 22)),
-                      ],
-                    ),
+                    flagIcon("0", Icons.assistant_photo, 0xFF399999),
+                    flagIcon("0", Icons.check, 0xFF339933),
+                    flagIcon("0", Icons.av_timer, 0xFF993399),
+                    flagIcon("0", Icons.ac_unit, 0xFF51d4ff),
+                    flagIcon("0", Icons.not_interested, 0xFF993333),
                   ],
                 ),
               ),
             )
           ],
         ),
+      );
+
+  flagIcon(String n, IconData icon, int color) => Column(
+        children: [
+          Icon(icon, size: 40, color: Color(color)),
+          Text(n, style: TextStyle(fontSize: 22)),
+        ],
       );
 
 // onLogout(context) async {

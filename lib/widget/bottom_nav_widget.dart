@@ -4,9 +4,9 @@ import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import 'package:unmei_fl/page/account_page.dart';
 import 'package:unmei_fl/page/news_page.dart';
 import 'package:unmei_fl/page/settings_page.dart';
+import 'package:unmei_fl/widget/utils_widget.dart';
 
 import '../page/novel_page.dart';
-import '../utils.dart';
 
 class BottomNavigation extends StatefulWidget {
 

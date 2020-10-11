@@ -1,10 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:unmei_fl/widget/utils_widget.dart';
 
 import '../data.dart';
-import '../utils.dart';
 
 class SettingsPage extends StatefulWidget {
 
@@ -64,7 +63,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       ),
                       Switch(
                         value: switchNotificationsBtn,
-                        onChanged: (btn) => onChangeBtn(btn),
+                        onChanged: (btn) {},
                         activeColor: Colors.red,
                       ),
                     ],
@@ -76,29 +75,5 @@ class _SettingsPageState extends State<SettingsPage> {
         ],
       ),
     );
-  }
-
-  btnContainer(String text, bool value) => Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          Container(
-            child: Text(
-              text,
-              style: TextStyle(fontSize: 18),
-            ),
-          ),
-          Switch(
-            value: value,
-            onChanged: (btn) => onChangeBtn(btn),
-            activeColor: Colors.red,
-          )
-        ],
-      );
-
-  onChangeBtn(bool btn) async {
-    var sharedPref = await SharedPreferences.getInstance();
-    setState(() {
-      switchNotificationsBtn = btn;
-    });
   }
 }

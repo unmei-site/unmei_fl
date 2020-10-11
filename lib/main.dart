@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
+import 'package:unmei_fl/bloc/unmei_bloc.dart';
 import 'package:unmei_fl/widget/bottom_nav_widget.dart';
 
 import 'data.dart';
@@ -14,7 +16,10 @@ class App extends StatelessWidget {
       child: MaterialApp(
         title: 'Unmei',
         debugShowCheckedModeBanner: false,
-        home: BottomNavigation(),
+        home: BlocProvider(
+          create: (context) => UnmeiBloc(),
+          child: BottomNavigation(),
+        ),
       ),
     );
   }

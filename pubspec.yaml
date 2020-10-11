@@ -30,8 +30,13 @@ dependencies:
   url_launcher: ^5.5.2
   provider: ^4.3.2
   intl: ^0.16.1
+  hive: ^1.4.4+1
   shimmer: ^1.1.1
   persistent_bottom_nav_bar: ^2.0.5
+
+  bloc: ^6.0.3
+  flutter_bloc: ^6.0.6
+  equatable: ^1.2.5
 
   flutter_svg: ^0.19.0
   flutter:

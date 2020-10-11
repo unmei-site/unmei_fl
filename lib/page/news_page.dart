@@ -1,15 +1,26 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:unmei_fl/api/API.dart';
-import 'package:unmei_fl/model/json_model.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:unmei_fl/bloc/unmei_bloc.dart';
 import 'package:unmei_fl/widget/news_item_widget.dart';
+import 'package:unmei_fl/widget/utils_widget.dart';
 
-import '../utils.dart';
+class NewsPage extends StatefulWidget {
+  
+  @override
+  _NewsPageState createState() => _NewsPageState();
+}
 
-class NewsPage extends StatelessWidget {
+class _NewsPageState extends State<NewsPage> {
 
-  UnmeiRepo repo;
+  @override
+  void initState() {
+    super.initState();
+    _loadNews();
+  }
+
+  _loadNews() async {
+    context.bloc<UnmeiBloc>().add(InitialUnmei());
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,15 +42,22 @@ class NewsPage extends StatelessWidget {
             child: Container(
               width: double.infinity,
               height: MediaQuery.of(context).size.height,
-              child: FutureBuilder<News>(
-                future: repo.getInfoData<News>("news"),
-                // News.fromJson(jsonDecode(repo.getInfoData<News>("news"))) as Future<News>
-                builder: (context, snapshot) {
-                  if (snapshot.hasError) print(snapshot.error);
-                  return snapshot.hasData ? NewsItem(newsList: snapshot.data) : NewsItemShimmer();
-                },
-              ),
-            )
+              child: BlocBuilder<UnmeiBloc, UnmeiState>(builder: (context, state) {
+                if (state is UnmeiError) {
+                  // return Retry(
+                  //   message: "Неверный формат имени покемона!",
+                  // );
+                  print("Error parse!!!");
+                }
+                if (state is UnmeiInitial) {
+                  return NewsItemShimmer();
+                }
+                if (state is UnmeiLoaded) {
+                  return NewsItem(newsList: state.news);
+                }
+                return NewsItemShimmer();
+              }),
+            ),
           ),
         ],
       ),

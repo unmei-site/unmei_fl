@@ -1,10 +1,35 @@
-class News {
+class Login {
+  bool error;
+  String data;
+
+  Login({this.error, this.data});
+
+  Login.fromJson(Map<String, dynamic> json) {
+    error = json['error'];
+    data = json['data'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['error'] = this.error;
+    data['data'] = this.data;
+    return data;
+  }
+}
+
+abstract class Response {
+  fromJson(Map<String, dynamic> json);
+  Map<String, dynamic> toJson();
+}
+
+class News implements Response {
   bool error;
   List<NewsData> data;
 
   News({this.error, this.data});
 
-  News.fromJson(Map<String, dynamic> json) {
+  @override
+  fromJson(Map<String, dynamic> json) {
     error = json['error'];
     if (json['data'] != null) {
       data = new List<NewsData>();
@@ -33,13 +58,14 @@ class NewsData {
   int authorId;
   String author;
 
-  NewsData({this.id,
-    this.title,
-    this.shortPost,
-    this.fullPost,
-    this.date,
-    this.authorId,
-    this.author});
+  NewsData(
+      {this.id,
+      this.title,
+      this.shortPost,
+      this.fullPost,
+      this.date,
+      this.authorId,
+      this.author});
 
   NewsData.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -64,13 +90,14 @@ class NewsData {
   }
 }
 
-class Novels {
+class Novels implements Response {
   bool error;
   List<NovelsData> data;
 
   Novels({this.error, this.data});
 
-  Novels.fromJson(Map<String, dynamic> json) {
+  @override
+  fromJson(Map<String, dynamic> json) {
     error = json['error'];
     if (json['data'] != null) {
       data = new List<NovelsData>();
@@ -99,13 +126,14 @@ class NovelsData {
   int rating;
   String releaseDate;
 
-  NovelsData({this.id,
-    this.originalName,
-    this.localizedName,
-    this.description,
-    this.image,
-    this.rating,
-    this.releaseDate});
+  NovelsData(
+      {this.id,
+      this.originalName,
+      this.localizedName,
+      this.description,
+      this.image,
+      this.rating,
+      this.releaseDate});
 
   NovelsData.fromJson(Map<String, dynamic> json) {
     id = json['id'];

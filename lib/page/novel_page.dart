@@ -1,29 +1,27 @@
 import 'package:flutter/material.dart';
-import 'package:unmei_fl/api/API.dart';
-import 'package:unmei_fl/model/json_model.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:unmei_fl/bloc/unmei_bloc.dart';
+import 'package:unmei_fl/widget/news_item_widget.dart';
 import 'package:unmei_fl/widget/novel_card_widget.dart';
-
-import '../utils.dart';
+import 'package:unmei_fl/widget/utils_widget.dart';
 
 class NovelsPage extends StatefulWidget {
+
   @override
   _NovelsPageState createState() => _NovelsPageState();
 }
 
 class _NovelsPageState extends State<NovelsPage> {
-  var _novelsList = Novels();
-  var _novelsListDisplay = Novels();
+  final searchController = TextEditingController();
 
   @override
   void initState() {
-    fetchNovelData().then((value) {
-      setState(() {
-        _novelsList.data = [];
-        _novelsList.data.addAll(value.data);
-        _novelsListDisplay.data = _novelsList.data;
-      });
-    });
     super.initState();
+    _loadNovels();
+  }
+
+  _loadNovels() async {
+    context.bloc<UnmeiBloc>().add(InitialUnmei(text: searchController.text));
   }
 
   @override
@@ -59,14 +57,9 @@ class _NovelsPageState extends State<NovelsPage> {
                       hintStyle: TextStyle(color: Colors.black54),
                       border: InputBorder.none,
                     ),
+                    controller: searchController,
                     onChanged: (text) {
-                      text = text.toLowerCase();
-                      setState(() {
-                        _novelsListDisplay.data = _novelsList.data.where((novel) {
-                          var noteTitle = novel.originalName.toLowerCase();
-                          return noteTitle.contains(text);
-                        }).toList();
-                      });
+                      _loadNovels();
                     },
                   ),
                   decoration: BoxDecoration(
@@ -77,7 +70,21 @@ class _NovelsPageState extends State<NovelsPage> {
                 Container(
                   width: double.infinity,
                   height: MediaQuery.of(context).size.height - 250,
-                  child: NovelCard(novelsList: _novelsListDisplay),
+                  child: BlocBuilder<UnmeiBloc, UnmeiState>(builder: (context, state) {
+                    if (state is UnmeiError) {
+                      // return Retry(
+                      //   message: "Неверный формат имени покемона!",
+                      // );
+                      print("Error parse!!!");
+                    }
+                    if (state is UnmeiInitial) {
+                      return NewsItemShimmer();
+                    }
+                    if (state is UnmeiLoaded) {
+                      return NovelCard(novelsList: state.novels);
+                    }
+                    // return NewsItemShimmer();
+                  }),
                 ),
               ],
             ),
