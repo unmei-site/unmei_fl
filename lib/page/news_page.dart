@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:unmei_fl/api/API.dart';
 import 'package:unmei_fl/model/json_model.dart';
@@ -6,6 +8,8 @@ import 'package:unmei_fl/widget/news_item_widget.dart';
 import '../utils.dart';
 
 class NewsPage extends StatelessWidget {
+
+  UnmeiRepo repo;
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +32,8 @@ class NewsPage extends StatelessWidget {
               width: double.infinity,
               height: MediaQuery.of(context).size.height,
               child: FutureBuilder<News>(
-                future: fetchNewsData(),
+                future: repo.getInfoData<News>("news"),
+                // News.fromJson(jsonDecode(repo.getInfoData<News>("news"))) as Future<News>
                 builder: (context, snapshot) {
                   if (snapshot.hasError) print(snapshot.error);
                   return snapshot.hasData ? NewsItem(newsList: snapshot.data) : NewsItemShimmer();
