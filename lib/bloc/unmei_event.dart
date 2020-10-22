@@ -5,9 +5,6 @@ abstract class UnmeiEvent {}
 
 class InitialUnmei extends UnmeiEvent {
   final String text;
-
-
   
-
   InitialUnmei({this.text});
 }
