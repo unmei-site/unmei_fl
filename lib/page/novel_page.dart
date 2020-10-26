@@ -6,7 +6,6 @@ import 'package:unmei_fl/widget/novel_card_widget.dart';
 import 'package:unmei_fl/widget/utils_widget.dart';
 
 class NovelsPage extends StatefulWidget {
-
   @override
   _NovelsPageState createState() => _NovelsPageState();
 }
@@ -27,15 +26,15 @@ class _NovelsPageState extends State<NovelsPage> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: onThemeON(context, Color(0xFF1F1F1F), Colors.deepPurple),
+      color: Colors.deepPurple,
       child: ListView(
         children: <Widget>[
-          pageHeader("Новеллы", onThemeON(context, Color(0xFF22156b), Colors.white)),
+          pageHeader("Новеллы", Colors.white),
           Container(
             height: MediaQuery.of(context).size.height,
             margin: const EdgeInsets.only(top: 20),
             decoration: BoxDecoration(
-              color: onThemeON(context, Color(0xFF121212), Colors.white),
+              color: Colors.white,
               borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(30),
                 topRight: Radius.circular(30),
@@ -70,7 +69,8 @@ class _NovelsPageState extends State<NovelsPage> {
                 Container(
                   width: double.infinity,
                   height: MediaQuery.of(context).size.height - 250,
-                  child: BlocBuilder<UnmeiBloc, UnmeiState>(builder: (context, state) {
+                  child: BlocBuilder<UnmeiBloc, UnmeiState>(
+                      builder: (context, state) {
                     if (state is UnmeiError) {
                       // return Retry(
                       //   message: "Неверный формат имени покемона!",

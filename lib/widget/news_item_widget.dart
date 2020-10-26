@@ -5,7 +5,6 @@ import 'package:unmei_fl/widget/utils_widget.dart';
 import '../utils.dart';
 
 class NewsItem extends StatelessWidget {
-
   final News newsList;
 
   const NewsItem({Key key, this.newsList}) : super(key: key);
@@ -14,13 +13,13 @@ class NewsItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListView.builder(
       itemCount: newsList.data.length,
-      itemBuilder: (context, index) =>  Container(
+      itemBuilder: (context, index) => Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(10)),
-          color: onThemeON(context, Color(0xFF333333), Colors.blue[100]),
+          color: Colors.blue[100],
           border: Border.all(
             style: BorderStyle.solid,
-            color: onThemeON(context, Color(0xFF121212), Colors.blueAccent),
+            color: Colors.blueAccent,
             width: 2,
           ),
         ),
@@ -36,17 +35,15 @@ class NewsItem extends StatelessWidget {
                 style: TextStyle(
                     fontWeight: FontWeight.w700,
                     fontSize: 20,
-                    color: onThemeON(context, Colors.white, Colors.black)
-                ),
+                    color: Colors.black),
               ),
             ),
             setLine(context),
             Container(
-              margin: const EdgeInsets.only(
-                  top: 5, bottom: 5, left: 10),
+              margin: const EdgeInsets.only(top: 5, bottom: 5, left: 10),
               child: Text(
                 "${newsList.data[index].shortPost}",
-                style: TextStyle(fontSize: 14, color: onThemeON(context, Colors.white, Colors.black)),
+                style: TextStyle(fontSize: 14, color: Colors.black),
               ),
             ),
             setLine(context),
@@ -59,13 +56,12 @@ class NewsItem extends StatelessWidget {
                     children: <Widget>[
                       Icon(
                         Icons.date_range,
-                        color: onThemeON(context, Colors.white, Colors.blueAccent),
+                        color: Colors.blueAccent,
                         size: 20.0,
                       ),
                       Text(
                         " ${setDateTimeFull(newsList.data[index].date, 3)}",
-                        style: TextStyle(
-                            fontSize: 14, color: onThemeON(context, Colors.white, Colors.black)),
+                        style: TextStyle(fontSize: 14, color: Colors.black),
                       ),
                     ],
                   ),
@@ -73,13 +69,12 @@ class NewsItem extends StatelessWidget {
                     children: <Widget>[
                       Icon(
                         Icons.border_color,
-                        color: onThemeON(context, Colors.white, Colors.blueAccent),
+                        color: Colors.blueAccent,
                         size: 18.0,
                       ),
                       Text(
                         " ${newsList.data[index].author}",
-                        style: TextStyle(
-                            fontSize: 14, color: onThemeON(context, Colors.white, Colors.black)),
+                        style: TextStyle(fontSize: 14, color: Colors.black),
                       ),
                     ],
                   ),
@@ -92,16 +87,15 @@ class NewsItem extends StatelessWidget {
     );
   }
 
-  Widget setLine(context) => Container(
-    height: 1,
-    width: double.infinity,
-    margin: const EdgeInsets.only(left: 10, right: 10),
-    color: onThemeON(context, Colors.white, Colors.black),
-  );
+  setLine(context) => Container(
+        height: 1,
+        width: double.infinity,
+        margin: const EdgeInsets.only(left: 10, right: 10),
+        color: Colors.black,
+      );
 }
 
 class NewsItemShimmer extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -116,5 +110,3 @@ class NewsItemShimmer extends StatelessWidget {
     );
   }
 }
-
-

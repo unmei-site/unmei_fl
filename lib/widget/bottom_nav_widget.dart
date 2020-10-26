@@ -4,12 +4,10 @@ import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import 'package:unmei_fl/page/account_page.dart';
 import 'package:unmei_fl/page/news_page.dart';
 import 'package:unmei_fl/page/settings_page.dart';
-import 'package:unmei_fl/widget/utils_widget.dart';
 
 import '../page/novel_page.dart';
 
 class BottomNavigation extends StatefulWidget {
-
   @override
   _BottomNavigationState createState() => _BottomNavigationState();
 }
@@ -34,34 +32,34 @@ class _BottomNavigationState extends State<BottomNavigation> {
       controller: _controller,
       items: _navBarsItems(),
       navBarStyle: NavBarStyle.style6,
-      backgroundColor: onThemeON(context, Color(0xFF1F1F1F), Colors.white),
+      backgroundColor: Colors.white,
     );
   }
 
   List<PersistentBottomNavBarItem> _navBarsItems() {
     return [
       PersistentBottomNavBarItem(
-        icon: Icon(CupertinoIcons.home),
+        icon: Icon(Icons.home),
         title: ("Главная"),
-        activeColor: onThemeON(context, Colors.white, Colors.blue),
+        activeColor: Colors.blue,
         inactiveColor: CupertinoColors.systemGrey,
       ),
       PersistentBottomNavBarItem(
-        icon: Icon(CupertinoIcons.book),
+        icon: Icon(Icons.my_library_books),
         title: ("Новеллы"),
-        activeColor: onThemeON(context, Colors.white, Colors.deepPurple),
+        activeColor: Colors.deepPurple,
         inactiveColor: CupertinoColors.systemGrey,
       ),
       PersistentBottomNavBarItem(
-        icon: Icon(CupertinoIcons.person),
+        icon: Icon(Icons.person),
         title: ("Аккаунт"),
-        activeColor: onThemeON(context, Colors.white, Colors.green),
+        activeColor: Colors.green,
         inactiveColor: CupertinoColors.systemGrey,
       ),
       PersistentBottomNavBarItem(
-        icon: Icon(CupertinoIcons.settings),
+        icon: Icon(Icons.settings),
         title: ("Настройки"),
-        activeColor: onThemeON(context, Colors.white, Colors.red),
+        activeColor: Colors.red,
         inactiveColor: CupertinoColors.systemGrey,
       ),
     ];

@@ -1,11 +1,13 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:unmei_fl/widget/utils_widget.dart';
 
-import '../data.dart';
+import 'package:http/http.dart' as http;
+
 import '../utils.dart';
 
 class AccountPage extends StatefulWidget {
@@ -18,14 +20,16 @@ class _AccountPageState extends State<AccountPage> {
 
   @override
   void initState() {
-    // checkLogin();
     super.initState();
+    checkLogin();
   }
 
-  // checkLogin() async {
-  //   var sharedPref = await SharedPreferences.getInstance();
-  //   if (sharedPref.getString("token") != null) Navigator.of(context).push(MaterialPageRoute(builder: (context) => UserAccount()));
-  // }
+  checkLogin() async {
+    var sharedPref = await SharedPreferences.getInstance();
+    if (sharedPref.getString("token") != null)
+      Navigator.of(context)
+          .push(MaterialPageRoute(builder: (context) => UserAccount()));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,11 +37,10 @@ class _AccountPageState extends State<AccountPage> {
       body: _isLoading
           ? Center(child: CircularProgressIndicator())
           : Container(
-              color: onThemeON(context, Color(0xFF1f1f1f), Colors.green),
+              color: Colors.green,
               child: ListView(
                 children: <Widget>[
-                  pageHeader("Аккаунт",
-                      onThemeON(context, Color(0xFF1f6b22), Colors.white)),
+                  pageHeader("Аккаунт", Colors.white),
                   accBody(),
                 ],
               ),
@@ -50,7 +53,7 @@ class _AccountPageState extends State<AccountPage> {
         width: double.infinity,
         margin: const EdgeInsets.only(top: 20),
         decoration: BoxDecoration(
-          color: onThemeON(context, Color(0xFF121212), Colors.white),
+          color: Colors.white,
           borderRadius: BorderRadius.only(
             topLeft: Radius.circular(30),
             topRight: Radius.circular(30),
@@ -65,7 +68,6 @@ class _AccountPageState extends State<AccountPage> {
                 style: TextStyle(
                   fontSize: 28,
                   fontWeight: FontWeight.w500,
-                  color: onThemeON(context, Colors.white, Colors.black),
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -73,11 +75,11 @@ class _AccountPageState extends State<AccountPage> {
             Container(
               margin: const EdgeInsets.only(top: 10, right: 20, left: 20),
               decoration: BoxDecoration(
-                color: onThemeON(context, null, Colors.green[100]),
+                color: Colors.green[100],
                 borderRadius: BorderRadius.all(Radius.circular(10)),
                 border: Border.all(
                   style: BorderStyle.solid,
-                  color: onThemeON(context, Color(0xFF121212), Colors.green),
+                  color: Colors.green,
                   width: 2,
                 ),
               ),
@@ -105,13 +107,9 @@ class _AccountPageState extends State<AccountPage> {
                             signIn(
                                 loginController.text, passwordController.text);
                           },
-                          color: onThemeON(
-                              context, Color(0xFF333333), Colors.white),
+                          color: Colors.white,
                           child: Text(
                             "Войти",
-                            style: TextStyle(
-                                color: onThemeON(
-                                    context, Colors.white, Colors.black)),
                           ),
                         ),
                       ),
@@ -131,28 +129,24 @@ class _AccountPageState extends State<AccountPage> {
                               onPressed: () {
                                 launchURL("https://unmei.space/");
                               },
-                              color: onThemeON(
-                                  context, Color(0xFF333333), Colors.white),
+                              color: Colors.white,
                               child: Text(
                                 "Регистрация",
-                                style: TextStyle(
-                                    color: onThemeON(
-                                        context, Colors.white, Colors.black)),
                               ),
                             ),
                           ),
                         ),
                         CircleAvatar(
-                          backgroundColor: onThemeON(
-                              context, Color(0xFF333333), Colors.white),
+                          backgroundColor: Colors.white,
                           child: IconButton(
                             color: Colors.black,
                             onPressed: () {
                               launchURL("https://unmei.space/restore");
                             },
-                            icon: Icon(Icons.lock_open,
-                                color: onThemeON(
-                                    context, Colors.white, Colors.black)),
+                            icon: Icon(
+                              Icons.lock_open,
+                              color: Colors.black,
+                            ),
                           ),
                         ),
                       ],
@@ -171,24 +165,15 @@ class _AccountPageState extends State<AccountPage> {
                   accSocialIcon(
                       "https://vk.com/unmei_site",
                       "assets/icons/vk.svg",
-                      context.watch<DataApp>().changeThemeData
-                          ? 0xFF333333
-                          : 0xFF597da3,
+                      0xFF597da3,
                       const EdgeInsets.only(right: 5)),
                   accSocialIcon(
                       "https://t.me/unmei_site",
                       "assets/icons/telegram.svg",
-                      context.watch<DataApp>().changeThemeData
-                          ? 0xFF333333
-                          : 0xFF0088cc,
+                      0xFF0088cc,
                       const EdgeInsets.only(right: 5)),
-                  accSocialIcon(
-                      "https://discord.gg/4CA8Cju",
-                      "assets/icons/discord.svg",
-                      context.watch<DataApp>().changeThemeData
-                          ? 0xFF333333
-                          : 0xFF7289DA,
-                      null),
+                  accSocialIcon("https://discord.gg/4CA8Cju",
+                      "assets/icons/discord.svg", 0xFF7289DA, null),
                 ],
               ),
             ),
@@ -201,11 +186,35 @@ class _AccountPageState extends State<AccountPage> {
 
   signIn(String login, String password) async {
     var sharedPref = await SharedPreferences.getInstance();
-    Navigator.of(context).push(MaterialPageRoute(builder: (context) => UserAccount()));
-    // print(await fetchUser(login, password));
+    var data = {
+      'login': login,
+      'password': password,
+    };
+
+    var resp = await http.post(
+        "https://api.unmei.space/v1/auth/login?auth_type=token",
+        body: jsonEncode(data));
+    if (resp.statusCode == 200) {
+      var request = jsonDecode(resp.body);
+      sharedPref.setString('token', request['data']);
+      showToast(context, "Добро пожаловать!", Colors.green, Icons.check);
+
+      setState(() {
+        _isLoading = false;
+      });
+      Navigator.of(context)
+          .push(MaterialPageRoute(builder: (context) => UserAccount()));
+    } else {
+      setState(() {
+        _isLoading = false;
+      });
+      print(resp.body);
+    }
   }
 
-  textInput(String text, bool hideText, IconData icon, TextEditingController controller) => Container(
+  textInput(String text, bool hideText, IconData icon,
+          TextEditingController controller) =>
+      Container(
         margin: const EdgeInsets.only(top: 10, left: 40, right: 40),
         height: 40,
         width: double.infinity,
@@ -248,10 +257,10 @@ class UserAccount extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        color: onThemeON(context, Color(0xFF1f1f1f), Colors.green),
+        color: Colors.green,
         child: ListView(
           children: <Widget>[
-            pageHeader("Аккаунт", onThemeON(context, Color(0xFF1f6b22), Colors.white)),
+            pageHeader("Аккаунт", Colors.white),
             accBody(context),
           ],
         ),
@@ -264,7 +273,7 @@ class UserAccount extends StatelessWidget {
         width: double.infinity,
         margin: const EdgeInsets.only(top: 20),
         decoration: BoxDecoration(
-          color: onThemeON(context, Color(0xFF121212), Colors.white),
+          color: Colors.white,
           borderRadius: BorderRadius.only(
             topLeft: Radius.circular(30),
             topRight: Radius.circular(30),
@@ -286,10 +295,24 @@ class UserAccount extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          "Username",
-                          style: TextStyle(
-                              fontSize: 22, fontWeight: FontWeight.w500),
+                        Row(
+                          children: [
+                            Text(
+                              "Username",
+                              style: TextStyle(
+                                  fontSize: 22, fontWeight: FontWeight.w500),
+                            ),
+                            Container(
+                              margin: const EdgeInsets.only(left: 5),
+                              child: GestureDetector(
+                                onTap: () => onLogout(context),
+                                child: Icon(
+                                  Icons.exit_to_app,
+                                  size: 30,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                         Container(
                           padding: const EdgeInsets.all(5),
@@ -339,10 +362,12 @@ class UserAccount extends StatelessWidget {
         ],
       );
 
-// onLogout(context) async {
-//   var sharedPref = await SharedPreferences.getInstance();
-//   sharedPref.remove("token");
-//   Navigator.of(context).push(MaterialPageRoute(builder: (context) => AccountPage()));
-//   print("Success exited!");
-// }
+  onLogout(context) async {
+    var sharedPref = await SharedPreferences.getInstance();
+    sharedPref.remove("token");
+    Navigator.of(context)
+        .push(MaterialPageRoute(builder: (context) => AccountPage()));
+    showToast(context, "Возвращайтесь!", Colors.amber, Icons.next_plan);
+    print("Success exited!");
+  }
 }
