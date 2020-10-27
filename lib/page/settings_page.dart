@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:unmei_fl/bloc/unmei_theme_bloc.dart';
-import 'package:unmei_fl/main.dart';
+import 'package:get/get.dart';
+import 'package:theme_provider/theme_provider.dart';
+import 'package:unmei_fl/utils.dart';
 import 'package:unmei_fl/widget/utils_widget.dart';
 
 import '../theme.dart';
@@ -31,7 +31,7 @@ class _SettingsPageState extends State<SettingsPage> {
             height: MediaQuery.of(context).size.height,
             margin: const EdgeInsets.only(top: 20),
             decoration: BoxDecoration(
-              color: appThemeData[ThemeConfig.values[0]].primaryColor,
+              color: ThemeProvider.themeOf(context).data.primaryColor,
               borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(30),
                 topRight: Radius.circular(30),
@@ -69,11 +69,11 @@ class _SettingsPageState extends State<SettingsPage> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          themeBtn(ThemeConfig.light),
-                          themeBtn(ThemeConfig.dark),
-                          themeBtn(ThemeConfig.blueDark),
-                          themeBtn(ThemeConfig.greenDark),
-                          themeBtn(ThemeConfig.redDark),
+                          themeBtn(appThemeData[ThemeConfig.light], "Светлая тема", Colors.grey),
+                          themeBtn(appThemeData[ThemeConfig.dark], "Темная тема", Colors.black12),
+                          themeBtn(appThemeData[ThemeConfig.blueDark], "Темно-синия тема", Colors.blue[900]),
+                          themeBtn(appThemeData[ThemeConfig.redDark], "Темно-красная тема", Colors.red[900]),
+                          themeBtn(appThemeData[ThemeConfig.greenDark], "Темно-зеленая тема", Colors.green[900]),
                         ],
                       ),
                     ],
@@ -87,12 +87,18 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 
-  themeBtn(ThemeConfig theme) => GestureDetector(
+  themeBtn(ThemeData theme, String str, Color color) => GestureDetector(
         onTap: () {
-          BlocProvider.of<ThemeBloc>(context).add(
-            ThemeChanged(theme: theme),
-          );
+          Get.changeTheme(theme);
+          showToast(context, str, color, Icons.brightness_3);
         },
-        child: CircleAvatar(radius: 25, child: Icon(Icons.brightness_6)),
+        child: CircleAvatar(
+          radius: 25,
+          child: Icon(
+            Icons.brightness_6,
+            color: Colors.white,
+          ),
+          backgroundColor: ThemeProvider.themeOf(context).data.primaryColor,
+        ),
       );
 }

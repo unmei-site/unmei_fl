@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:unmei_fl/widget/utils_widget.dart';
 
 import 'package:http/http.dart' as http;
@@ -17,6 +17,7 @@ class AccountPage extends StatefulWidget {
 
 class _AccountPageState extends State<AccountPage> {
   bool _isLoading = false;
+  var box = GetStorage();
 
   @override
   void initState() {
@@ -25,10 +26,9 @@ class _AccountPageState extends State<AccountPage> {
   }
 
   checkLogin() async {
-    var sharedPref = await SharedPreferences.getInstance();
-    if (sharedPref.getString("token") != null)
-      Navigator.of(context)
-          .push(MaterialPageRoute(builder: (context) => UserAccount()));
+    await GetStorage.init();
+    print(box.read('token'));
+    // if (box.read('token') != null) goTo(context, UserAccount());
   }
 
   @override
@@ -166,12 +166,12 @@ class _AccountPageState extends State<AccountPage> {
                       "https://vk.com/unmei_site",
                       "assets/icons/vk.svg",
                       0xFF597da3,
-                      const EdgeInsets.only(right: 5)),
+                      const EdgeInsets.only(right: 15)),
                   accSocialIcon(
                       "https://t.me/unmei_site",
                       "assets/icons/telegram.svg",
                       0xFF0088cc,
-                      const EdgeInsets.only(right: 5)),
+                      const EdgeInsets.only(right: 15)),
                   accSocialIcon("https://discord.gg/4CA8Cju",
                       "assets/icons/discord.svg", 0xFF7289DA, null),
                 ],
@@ -185,7 +185,6 @@ class _AccountPageState extends State<AccountPage> {
   final passwordController = TextEditingController();
 
   signIn(String login, String password) async {
-    var sharedPref = await SharedPreferences.getInstance();
     var data = {
       'login': login,
       'password': password,
@@ -195,20 +194,21 @@ class _AccountPageState extends State<AccountPage> {
         "https://api.unmei.space/v1/auth/login?auth_type=token",
         body: jsonEncode(data));
     if (resp.statusCode == 200) {
+      await GetStorage.init();
       var request = jsonDecode(resp.body);
-      sharedPref.setString('token', request['data']);
+      box.write('token', request['data']);
       showToast(context, "Добро пожаловать!", Colors.green, Icons.check);
 
       setState(() {
         _isLoading = false;
       });
-      Navigator.of(context)
-          .push(MaterialPageRoute(builder: (context) => UserAccount()));
+      goTo(context, UserAccount());
     } else {
       setState(() {
         _isLoading = false;
       });
       print(resp.body);
+      showToast(context, "Неверный логин и/или пароль!", Colors.red, Icons.cancel);
     }
   }
 
@@ -363,10 +363,9 @@ class UserAccount extends StatelessWidget {
       );
 
   onLogout(context) async {
-    var sharedPref = await SharedPreferences.getInstance();
-    sharedPref.remove("token");
-    Navigator.of(context)
-        .push(MaterialPageRoute(builder: (context) => AccountPage()));
+    var box = GetStorage();
+    box.remove("token");
+    goTo(context, AccountPage());
     showToast(context, "Возвращайтесь!", Colors.amber, Icons.next_plan);
     print("Success exited!");
   }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 setDateTimeFull(String date, int utc) => DateFormat("dd.MM.yyyy, HH:mm:ss")
@@ -46,4 +47,24 @@ showToast(context, String msg, Color color, IconData icon) {
     gravity: ToastGravity.BOTTOM,
     toastDuration: Duration(seconds: 2),
   );
+}
+
+goTo(context, Widget cls) {
+  Navigator.of(context)
+          .push(MaterialPageRoute(builder: (context) => cls));
+}
+
+writeData(String key, String value) async {
+  var pref = await SharedPreferences.getInstance();
+  pref.setString(key, value);
+}
+
+getData(String key) async {
+  var pref = await SharedPreferences.getInstance();
+  pref.getString(key);
+}
+
+removeData(String key) async {
+  var pref = await SharedPreferences.getInstance();
+  pref.remove(key);
 }
