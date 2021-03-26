@@ -1,16 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 
-pageHeader(String text, Color color) => Container(
+pageHeader(String text, context) => Container(
       margin: const EdgeInsets.only(top: 20),
       child: Text(
         text,
         textAlign: TextAlign.center,
-        style: TextStyle(
-          color: color,
-          fontWeight: FontWeight.w500,
-          fontSize: 42,
-        ),
+        style: Theme.of(context).textTheme.bodyText1,
       ),
     );
 

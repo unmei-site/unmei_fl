@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:unmei_fl/bloc/unmei_bloc.dart';
+import 'package:unmei_fl/cubit/news/unmei_news_cubit.dart';
+import 'package:unmei_fl/cubit/novels/unmei_novels_cubit.dart';
 import 'package:unmei_fl/widget/news_item_widget.dart';
 import 'package:unmei_fl/widget/novel_card_widget.dart';
 import 'package:unmei_fl/widget/utils_widget.dart';
@@ -19,8 +21,8 @@ class _NovelsPageState extends State<NovelsPage> {
     _loadNovels();
   }
 
-  _loadNovels() async {
-    context.bloc<UnmeiBloc>().add(InitialUnmei(text: searchController.text));
+  _loadNovels() {
+    context.read<UnmeiNovelsCubit>().getNovels(searchController.text);
   }
 
   @override
@@ -29,7 +31,7 @@ class _NovelsPageState extends State<NovelsPage> {
       color: Colors.deepPurple,
       child: ListView(
         children: <Widget>[
-          pageHeader("Новеллы", Colors.white),
+          pageHeader("Новеллы", context),
           Container(
             height: MediaQuery.of(context).size.height,
             margin: const EdgeInsets.only(top: 20),
@@ -69,21 +71,15 @@ class _NovelsPageState extends State<NovelsPage> {
                 Container(
                   width: double.infinity,
                   height: MediaQuery.of(context).size.height - 250,
-                  child: BlocBuilder<UnmeiBloc, UnmeiState>(
-                      builder: (context, state) {
-                    if (state is UnmeiError) {
-                      // return Retry(
-                      //   message: "Неверный формат имени покемона!",
-                      // );
-                      print("Error parse!!!");
-                    }
-                    if (state is UnmeiInitial) {
-                      return NewsItemShimmer();
-                    }
-                    if (state is UnmeiLoaded) {
-                      return NovelCard(novelsList: state.novels);
-                    }
-                    // return NewsItemShimmer();
+                  child: BlocBuilder<UnmeiNovelsCubit, UnmeiNovelsState>(builder: (context, state) {
+                    if (state is UnmeiNovelsInitial) return NewsItemShimmer();
+                    if (state is UnmeiNovelsLoad) return NovelCard(novelsList: state.novels);
+                    return Center(
+                      child: Text(
+                        "Произошла ошибка :(",
+                        style: TextStyle(fontSize: 24, color: Colors.red),
+                      ),
+                    );
                   }),
                 ),
               ],

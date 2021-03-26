@@ -50,8 +50,7 @@ showToast(context, String msg, Color color, IconData icon) {
 }
 
 goTo(context, Widget cls) {
-  Navigator.of(context)
-          .push(MaterialPageRoute(builder: (context) => cls));
+  Navigator.of(context).push(MaterialPageRoute(builder: (context) => cls));
 }
 
 writeData(String key, String value) async {
@@ -61,7 +60,7 @@ writeData(String key, String value) async {
 
 getData(String key) async {
   var pref = await SharedPreferences.getInstance();
-  pref.getString(key);
+  return pref.getString(key);
 }
 
 removeData(String key) async {

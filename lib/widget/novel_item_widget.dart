@@ -37,7 +37,7 @@ class NovelItemPage extends StatelessWidget {
                     children: <Widget>[
                       Text(
                         "${novelsList.data[index].rating}",
-                        style: TextStyle(fontSize: 18),
+                        style: TextStyle(fontSize: 18, color: Colors.black),
                       ),
                       Icon(
                         Icons.star,
@@ -70,7 +70,7 @@ class NovelItemPage extends StatelessWidget {
               margin: const EdgeInsets.only(top: 10, left: 10, right: 10),
               child: Text(
                 "${novelsList.data[index].description}",
-                style: TextStyle(fontSize: 16),
+                style: TextStyle(fontSize: 16, color: Colors.black),
               ),
             )
           ],
@@ -80,5 +80,5 @@ class NovelItemPage extends StatelessWidget {
   }
 
   textStyle(String text) =>
-      Text(text, style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500));
+      Text(text, style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: Colors.black));
 }

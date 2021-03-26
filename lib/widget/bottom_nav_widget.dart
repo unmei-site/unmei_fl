@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:get_storage/get_storage.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import 'package:unmei_fl/page/account_page.dart';
 import 'package:unmei_fl/page/news_page.dart';
@@ -14,22 +13,18 @@ class BottomNavigation extends StatefulWidget {
 }
 
 class _BottomNavigationState extends State<BottomNavigation> {
-  // var _listPage = List<Widget>();
+
   var _controller = PersistentTabController(initialIndex: 0);
-  var box = GetStorage();
 
   @override
   void initState() {
-    // _listPage.add(NewsPage());
-    // _listPage.add(NovelsPage());
-    // _listPage.add(AccountPage());
-    // _listPage.add(SettingsPage());
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return PersistentTabView(
+      context,
       screens: _buildScreens(),
       controller: _controller,
       items: _navBarsItems(),

@@ -32,7 +32,7 @@ class News implements Response {
   fromJson(Map<String, dynamic> json) {
     error = json['error'];
     if (json['data'] != null) {
-      data = new List<NewsData>();
+      data = <NewsData>[];
       json['data'].forEach((v) {
         data.add(new NewsData.fromJson(v));
       });
@@ -100,7 +100,7 @@ class Novels implements Response {
   fromJson(Map<String, dynamic> json) {
     error = json['error'];
     if (json['data'] != null) {
-      data = new List<NovelsData>();
+      data = <NovelsData>[];
       json['data'].forEach((v) {
         data.add(new NovelsData.fromJson(v));
       });
@@ -154,6 +154,132 @@ class NovelsData {
     data['image'] = this.image;
     data['rating'] = this.rating;
     data['release_date'] = this.releaseDate;
+    return data;
+  }
+}
+
+class User implements Response {
+  bool error;
+  UserData data;
+
+  User({this.error, this.data});
+
+  @override
+  fromJson(Map<String, dynamic> json) {
+    error = json['error'];
+    data = json['data'] != null ? new UserData.fromJson(json['data']) : null;
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['error'] = this.error;
+    if (this.data != null) {
+      data['data'] = this.data.toJson();
+    }
+    return data;
+  }
+}
+
+class UserData {
+  int id;
+  String username;
+  String regDate;
+  String lastSeen;
+  String avatar;
+  bool isSuperuser;
+  bool isActivated;
+  UserGroup group;
+  String cover;
+  bool useGravatar;
+  String theme;
+  bool isBanned;
+
+  UserData(
+      {this.id,
+        this.username,
+        this.regDate,
+        this.lastSeen,
+        this.avatar,
+        this.isSuperuser,
+        this.isActivated,
+        this.group,
+        this.cover,
+        this.useGravatar,
+        this.theme,
+        this.isBanned});
+
+  UserData.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    username = json['username'];
+    regDate = json['reg_date'];
+    lastSeen = json['last_seen'];
+    avatar = json['avatar'];
+    isSuperuser = json['is_superuser'];
+    isActivated = json['is_activated'];
+    group = json['group'] != null ? new UserGroup.fromJson(json['group']) : null;
+    cover = json['cover'];
+    useGravatar = json['use_gravatar'];
+    theme = json['theme'];
+    isBanned = json['is_banned'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['username'] = this.username;
+    data['reg_date'] = this.regDate;
+    data['last_seen'] = this.lastSeen;
+    data['avatar'] = this.avatar;
+    data['is_superuser'] = this.isSuperuser;
+    data['is_activated'] = this.isActivated;
+    if (this.group != null) {
+      data['group'] = this.group.toJson();
+    }
+    data['cover'] = this.cover;
+    data['use_gravatar'] = this.useGravatar;
+    data['theme'] = this.theme;
+    data['is_banned'] = this.isBanned;
+    return data;
+  }
+}
+
+class UserGroup {
+  int id;
+  String name;
+  String color;
+  int maxAvatarSize;
+  int maxAvatarWeight;
+  bool isSuperuser;
+  String permissions;
+
+  UserGroup(
+      {this.id,
+        this.name,
+        this.color,
+        this.maxAvatarSize,
+        this.maxAvatarWeight,
+        this.isSuperuser,
+        this.permissions});
+
+  UserGroup.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    name = json['name'];
+    color = json['color'];
+    maxAvatarSize = json['max_avatar_size'];
+    maxAvatarWeight = json['max_avatar_weight'];
+    isSuperuser = json['is_superuser'];
+    permissions = json['permissions'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['name'] = this.name;
+    data['color'] = this.color;
+    data['max_avatar_size'] = this.maxAvatarSize;
+    data['max_avatar_weight'] = this.maxAvatarWeight;
+    data['is_superuser'] = this.isSuperuser;
+    data['permissions'] = this.permissions;
     return data;
   }
 }

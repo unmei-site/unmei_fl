@@ -23,12 +23,13 @@ class NewsItem extends StatelessWidget {
             width: 2,
           ),
         ),
-        margin: const EdgeInsets.all(25),
+        margin: const EdgeInsets.only(top: 25, left: 25, right: 25),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Container(
               width: double.infinity,
-              margin: const EdgeInsets.only(left: 20, top: 5),
+              margin: const EdgeInsets.only(left: 10, top: 5),
               child: Text(
                 "${newsList.data[index].title}",
                 textAlign: TextAlign.left,
@@ -40,7 +41,7 @@ class NewsItem extends StatelessWidget {
             ),
             setLine(context),
             Container(
-              margin: const EdgeInsets.only(top: 5, bottom: 5, left: 10),
+              margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 20),
               child: Text(
                 "${newsList.data[index].shortPost}",
                 style: TextStyle(fontSize: 14, color: Colors.black),

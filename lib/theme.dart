@@ -1,27 +1,14 @@
 import 'package:flutter/material.dart';
 
-enum ThemeConfig {
-  light,
-  dark,
-  blueDark,
-  redDark,
-  greenDark,
-}
+final lightTheme = ThemeData.light().copyWith(
+  primaryColor: Colors.white,
+  textTheme: TextTheme(bodyText1: TextStyle(fontSize: 42, fontWeight: FontWeight.w500, color: Colors.white)),
+  primaryTextTheme: TextTheme(bodyText1: TextStyle(fontSize: 16, color: Colors.black)),
+);
 
-final appThemeData = {
-  ThemeConfig.light: ThemeData(
-      textTheme: TextTheme(bodyText2: TextStyle(color: Colors.lime)),
-      primaryColor: Colors.black),
-  ThemeConfig.dark: ThemeData(
-      textTheme: TextTheme(bodyText2: TextStyle(color: Colors.indigo)),
-      primaryColor: Colors.teal),
-  ThemeConfig.blueDark: ThemeData(
-      textTheme: TextTheme(bodyText2: TextStyle(color: Colors.pink)),
-      primaryColor: Colors.yellow),
-  ThemeConfig.redDark: ThemeData(
-      textTheme: TextTheme(bodyText2: TextStyle(color: Colors.green)),
-      primaryColor: Colors.blue),
-  ThemeConfig.greenDark: ThemeData(
-      textTheme: TextTheme(bodyText2: TextStyle(color: Colors.orangeAccent)),
-      primaryColor: Colors.cyan),
-};
+final darkTheme = ThemeData.dark().copyWith(
+  primaryColor: Colors.black54,
+  textTheme: TextTheme(bodyText1: TextStyle(fontSize: 42, fontWeight: FontWeight.w500, color: Colors.white)),
+  primaryTextTheme: TextTheme(bodyText1: TextStyle(fontSize: 16, color: Colors.black)),
+);
+
