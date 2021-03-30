@@ -1,11 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
-import 'package:unmei_fl/page/account_page.dart';
-import 'package:unmei_fl/page/news_page.dart';
-import 'package:unmei_fl/page/settings_page.dart';
 
-import '../page/novel_page.dart';
+import 'package:unmei_fl/presentation/page/account_page.dart';
+import 'package:unmei_fl/presentation/page/news_page.dart';
+import 'package:unmei_fl/presentation/page/novel_page.dart';
+import 'package:unmei_fl/presentation/page/settings_page.dart';
+
 
 class BottomNavigation extends StatefulWidget {
   @override
@@ -15,6 +17,8 @@ class BottomNavigation extends StatefulWidget {
 class _BottomNavigationState extends State<BottomNavigation> {
 
   var _controller = PersistentTabController(initialIndex: 0);
+  final storage = FlutterSecureStorage();
+  String token;
 
   @override
   void initState() {

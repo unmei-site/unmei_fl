@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:unmei_fl/model/json_model.dart';
-import 'file:///C:/Project/Flutter/unmei_fl/lib/widget/novel_item_widget.dart';
+import 'package:unmei_fl/data/model/json_model.dart';
+import 'novel_item_widget.dart';
 
 class NovelCard extends StatelessWidget {
   final Novels novelsList;

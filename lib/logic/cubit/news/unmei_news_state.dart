@@ -5,8 +5,8 @@ abstract class UnmeiNewsState {}
 
 class UnmeiNewsInitial extends UnmeiNewsState {}
 
-class UnmeiNewsLoad extends UnmeiNewsState {
+class UnmeiNewsLoaded extends UnmeiNewsState {
   final News news;
-  UnmeiNewsLoad({this.news});
-}
 
+  UnmeiNewsLoaded({this.news});
+}

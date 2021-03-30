@@ -10,16 +10,16 @@ environment:
 
 dependencies:
   http: ^0.12.2
-  # dio: ^3.0.10
-  # cookie_jar: ^1.0.0
-  # dio_cookie_manager: ^1.0.0
+  dio_cookie_manager: ^1.0.0
   shared_preferences: ^2.0.5
+  flutter_secure_storage: ^4.1.0
+  cookie_jar: ^1.0.1
+  dio: ^3.0.10
+  path_provider: ^2.0.1
 
   url_launcher: ^5.5.2
   shimmer: ^1.1.2
   persistent_bottom_nav_bar: ^3.1.0
-  # provider: ^4.3.2
-  # hive: ^1.4.4+1
 
   bloc: ^7.0.0
   flutter_bloc: ^7.0.0

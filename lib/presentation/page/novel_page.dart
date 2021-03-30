@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:unmei_fl/bloc/unmei_bloc.dart';
-import 'package:unmei_fl/cubit/news/unmei_news_cubit.dart';
-import 'package:unmei_fl/cubit/novels/unmei_novels_cubit.dart';
-import 'package:unmei_fl/widget/news_item_widget.dart';
-import 'package:unmei_fl/widget/novel_card_widget.dart';
-import 'package:unmei_fl/widget/utils_widget.dart';
+
+import 'package:unmei_fl/logic/cubit/novels/unmei_novels_cubit.dart';
+import 'package:unmei_fl/presentation/widget/news_item_widget.dart';
+import 'package:unmei_fl/presentation/widget/novel_card_widget.dart';
+import 'package:unmei_fl/presentation/widget/utils_widget.dart';
 
 class NovelsPage extends StatefulWidget {
   @override

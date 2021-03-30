@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:unmei_fl/model/json_model.dart';
+import 'package:unmei_fl/data/model/json_model.dart';
 
-import '../utils.dart';
+import '../../utils.dart';
 
 class NovelItemPage extends StatelessWidget {
   final Novels novelsList;

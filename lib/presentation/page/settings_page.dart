@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:unmei_fl/widget/utils_widget.dart';
+import 'package:unmei_fl/presentation/widget/utils_widget.dart';
 
 class SettingsPage extends StatefulWidget {
   @override

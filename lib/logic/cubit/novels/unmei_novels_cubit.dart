@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
-import 'package:meta/meta.dart';
-import 'package:unmei_fl/api/API.dart';
-import 'package:unmei_fl/model/json_model.dart';
+import 'package:flutter/material.dart';
+import 'package:unmei_fl/data/api/API.dart';
+import 'package:unmei_fl/data/model/json_model.dart';
 
 part 'unmei_novels_state.dart';
 
@@ -11,7 +11,7 @@ class UnmeiNovelsCubit extends Cubit<UnmeiNovelsState> {
   Novels novels;
 
   void getNovels(String text) async {
-    novels = await getNetworkData(Novels(), "novels?q=$text");
+    novels = await APIService().getNetworkData(Novels(), "novels?q=$text");
     emit(UnmeiNovelsLoad(novels: novels));
   }
 }

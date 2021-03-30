@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:unmei_fl/cubit/news/unmei_news_cubit.dart';
-import 'package:unmei_fl/widget/news_item_widget.dart';
-import 'package:unmei_fl/widget/utils_widget.dart';
+import 'package:unmei_fl/logic/cubit/news/unmei_news_cubit.dart';
+import 'package:unmei_fl/presentation/widget/news_item_widget.dart';
+import 'package:unmei_fl/presentation/widget/utils_widget.dart';
 
 class NewsPage extends StatefulWidget {
   @override
@@ -40,7 +40,7 @@ class _NewsPageState extends State<NewsPage> {
               child: BlocBuilder<UnmeiNewsCubit, UnmeiNewsState>(
                 builder: (context, state) {
                   if (state is UnmeiNewsInitial) return NewsItemShimmer();
-                  if (state is UnmeiNewsLoad) return NewsItem(newsList: state.news);
+                  if (state is UnmeiNewsLoaded) return NewsItem(newsList: state.news);
                   return Center(
                     child: Text(
                       "Произошла ошибка :(",

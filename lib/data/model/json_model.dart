@@ -17,12 +17,12 @@ class Login {
   }
 }
 
-abstract class Response {
+abstract class DataResponse {
   fromJson(Map<String, dynamic> json);
   Map<String, dynamic> toJson();
 }
 
-class News implements Response {
+class News implements DataResponse {
   bool error;
   List<NewsData> data;
 
@@ -90,7 +90,7 @@ class NewsData {
   }
 }
 
-class Novels implements Response {
+class Novels implements DataResponse {
   bool error;
   List<NovelsData> data;
 
@@ -158,7 +158,7 @@ class NovelsData {
   }
 }
 
-class User implements Response {
+class User implements DataResponse {
   bool error;
   UserData data;
 
