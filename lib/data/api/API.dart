@@ -30,7 +30,7 @@ class APIService {
     );
     final Directory dir = await _localCookieDirectory;
     final cookiePath = dir.path;
-    persistentCookies = new PersistCookieJar(dir: '$cookiePath');
+    persistentCookies = new PersistCookieJar();
     client.interceptors.add(CookieManager(persistentCookies));
   }
 
@@ -52,9 +52,9 @@ class APIService {
         print( e.response.statusCode.toString() + " " + e.response.statusMessage);
         print(e.response.data);
         print(e.response.headers);
-        print(e.response.request);
+        print(e.response.requestOptions);
       } else {
-        print(e.request);
+        print(e.requestOptions);
         print(e.message);
       }
     }

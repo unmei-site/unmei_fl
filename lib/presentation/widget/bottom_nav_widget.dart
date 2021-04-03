@@ -41,7 +41,7 @@ class _BottomNavigationState extends State<BottomNavigation> {
     return [
       NewsPage(),
       NovelsPage(),
-      AccountPage(),
+      // AccountPage(),
       SettingsPage(),
     ];
   }
@@ -51,26 +51,26 @@ class _BottomNavigationState extends State<BottomNavigation> {
       PersistentBottomNavBarItem(
         icon: Icon(Icons.home),
         title: ("Главная"),
-        activeColor: Colors.blue,
-        inactiveColor: CupertinoColors.systemGrey,
+        activeColorPrimary: Color(0xFF3f85ff),
+        inactiveColorPrimary: CupertinoColors.systemGrey,
       ),
       PersistentBottomNavBarItem(
         icon: Icon(Icons.my_library_books),
         title: ("Новеллы"),
-        activeColor: Colors.deepPurple,
-        inactiveColor: CupertinoColors.systemGrey,
+        activeColorPrimary: Color(0xFFa338eb),
+        inactiveColorPrimary: CupertinoColors.systemGrey,
       ),
-      PersistentBottomNavBarItem(
-        icon: Icon(Icons.person),
-        title: ("Аккаунт"),
-        activeColor: Colors.green,
-        inactiveColor: CupertinoColors.systemGrey,
-      ),
+      // PersistentBottomNavBarItem(
+      //   icon: Icon(Icons.person),
+      //   title: ("Аккаунт"),
+      //   activeColorPrimary: Colors.green,
+      //   inactiveColorPrimary: CupertinoColors.systemGrey,
+      // ),
       PersistentBottomNavBarItem(
         icon: Icon(Icons.settings),
         title: ("Настройки"),
-        activeColor: Colors.red,
-        inactiveColor: CupertinoColors.systemGrey,
+        activeColorPrimary: Color(0xFFeb3838),
+        inactiveColorPrimary: CupertinoColors.systemGrey,
       ),
     ];
   }

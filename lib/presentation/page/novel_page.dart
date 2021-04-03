@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
 
 import 'package:unmei_fl/logic/cubit/novels/unmei_novels_cubit.dart';
 import 'package:unmei_fl/presentation/widget/news_item_widget.dart';
 import 'package:unmei_fl/presentation/widget/novel_card_widget.dart';
 import 'package:unmei_fl/presentation/widget/utils_widget.dart';
+import 'package:unmei_fl/utils.dart';
 
 class NovelsPage extends StatefulWidget {
   @override
@@ -26,65 +28,62 @@ class _NovelsPageState extends State<NovelsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Colors.deepPurple,
-      child: ListView(
-        children: <Widget>[
-          pageHeader("Новеллы", context),
-          Container(
-            height: MediaQuery.of(context).size.height,
-            margin: const EdgeInsets.only(top: 20),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(30),
-                topRight: Radius.circular(30),
-              ),
-            ),
-            child: Column(
-              children: <Widget>[
-                Container(
-                  margin: const EdgeInsets.all(20),
-                  height: 40,
-                  width: double.infinity,
-                  child: TextField(
-                    style: TextStyle(
-                      color: Colors.black,
-                    ),
-                    decoration: InputDecoration(
-                      prefixIcon: Icon(Icons.search, color: Colors.black54),
-                      hintText: "Найти...",
-                      hintStyle: TextStyle(color: Colors.black54),
-                      border: InputBorder.none,
-                    ),
-                    controller: searchController,
-                    onChanged: (text) {
-                      _loadNovels();
-                    },
-                  ),
-                  decoration: BoxDecoration(
-                    color: Colors.grey[200],
-                    borderRadius: BorderRadius.all(Radius.circular(20)),
-                  ),
-                ),
-                Container(
-                  width: double.infinity,
-                  height: MediaQuery.of(context).size.height - 250,
-                  child: BlocBuilder<UnmeiNovelsCubit, UnmeiNovelsState>(builder: (context, state) {
-                    if (state is UnmeiNovelsInitial) return NewsItemShimmer();
-                    if (state is UnmeiNovelsLoad) return NovelCard(novelsList: state.novels);
-                    return Center(
-                      child: Text(
-                        "Произошла ошибка :(",
-                        style: TextStyle(fontSize: 24, color: Colors.red),
-                      ),
-                    );
-                  }),
-                ),
-              ],
+    return Scaffold(
+      appBar: AppBar(
+        leading: Container(
+          margin: EdgeInsets.all(5),
+          decoration: BoxDecoration(
+            border: Border.all(width: 1),
+            borderRadius: BorderRadius.circular(50),
+          ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(50),
+            child: GestureDetector(
+              onTap: () => showToast(context, "Входить в аккаунт пока нельзя 😒", Colors.red[900], Icons.cancel),
+                child: SvgPicture.asset("assets/icons/user.svg"),
             ),
           ),
-        ],
+        ),
+        title: Text("Новеллы", style: TextStyle(fontSize: 32, color: Colors.black)),
+        elevation: 0,
+        centerTitle: true,
+      ),
+      backgroundColor: Colors.grey[100],
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            TextField(
+              style: TextStyle(
+                color: Colors.black,
+              ),
+              decoration: InputDecoration(
+                prefixIcon: Icon(Icons.search, color: Colors.black54),
+                hintText: "Найти...",
+                filled: true,
+                fillColor: Colors.grey[300],
+                hintStyle: TextStyle(color: Colors.black54),
+                border: InputBorder.none,
+              ),
+              controller: searchController,
+              onChanged: (text) {
+                _loadNovels();
+              },
+            ),
+            Container(
+              height: MediaQuery.of(context).size.height - (MediaQuery.of(context).size.height/4.5),
+              child: BlocBuilder<UnmeiNovelsCubit, UnmeiNovelsState>(builder: (context, state) {
+                if (state is UnmeiNovelsInitial) return NewsItemShimmer();
+                if (state is UnmeiNovelsLoad) return NovelCard(novelsList: state.novels);
+                return Center(
+                  child: Text(
+                    "Произошла ошибка :(",
+                    style: TextStyle(fontSize: 24, color: Colors.red),
+                  ),
+                );
+              }),
+            ),
+          ],
+        ),
       ),
     );
   }

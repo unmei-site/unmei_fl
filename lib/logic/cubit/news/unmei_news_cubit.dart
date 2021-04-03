@@ -6,23 +6,13 @@ import 'package:unmei_fl/data/model/json_model.dart';
 
 part 'unmei_news_state.dart';
 
-class UnmeiNewsCubit extends Cubit<UnmeiNewsState> with HydratedMixin {
-  UnmeiNewsCubit() : super(UnmeiNewsInitial());
+class UnmeiNewsCubit extends Cubit<UnmeiNewsState> {
+  UnmeiNewsCubit() : super(UnmeiNewsLoading());
 
   News news;
 
   void getNews() async {
     news = await APIService().getNetworkData(News(), "news");
     emit(UnmeiNewsLoaded(news: news));
-  }
-
-  @override
-  UnmeiNewsState fromJson(Map<String, dynamic> json) {
-
-  }
-
-  @override
-  Map<String, dynamic> toJson(UnmeiNewsState state) {
-
   }
 }

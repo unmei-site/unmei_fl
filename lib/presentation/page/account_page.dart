@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:unmei_fl/data/api/API.dart';
-import 'package:unmei_fl/logic/cubit/user/unmei_user_cubit.dart';
+import 'package:unmei_fl/logic/bloc/user/unmei_user_bloc.dart';
 
 import '../../utils.dart';
 
@@ -27,8 +27,6 @@ class _AccountPageState extends State<AccountPage> {
 
     isFocusedLogin = false;
     isFocusedPass = false;
-    if (APIService().storage.read(key: 'token') != null)
-      context.read<UnmeiUserCubit>().getUser();
   }
 
   @override
@@ -40,30 +38,40 @@ class _AccountPageState extends State<AccountPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        leading: Container(
+          margin: EdgeInsets.all(5),
+          decoration: BoxDecoration(
+            border: Border.all(width: 1),
+            borderRadius: BorderRadius.circular(50),
+          ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(50),
+            child: Image.network("https://www.gravatar.com/avatar/c5e477032a2174c64323a91856d6b178"),
+          ),
+        ),
+        title: Text("Аккаунт", style: TextStyle(fontSize: 32, color: Colors.black)),
+        elevation: 0,
+        centerTitle: true,
+      ),
       backgroundColor: Colors.grey[100],
       body: Container(
         margin: EdgeInsets.symmetric(horizontal: 16),
         child: Center(
           child: ListView(
             children: [
-              GestureDetector(
-                onTap: () {
-                  APIService().removeToken();
-                },
-                child: Container(
-                  margin: EdgeInsets.symmetric(vertical: 24),
-                  child: Text(
-                    "Аккаунт",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 42,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                    ),
-                  ),
-                ),
-              ),
-              containerBlock(),
+              // BlocListener<UnmeiUserAuthBloc, UnmeiUserAuthState>(
+              //     listener: (context, state) {
+              //       switch (state.status) {
+              //         case AuthStatus.authenticated:
+              //           accountBodyAuth();
+              //           break;
+              //         case AuthStatus.unauthenticated:
+              //           logInBody();
+              //           break;
+              //         default: break;
+              //       }
+              //     }),
             ],
           ),
         ),
@@ -71,17 +79,7 @@ class _AccountPageState extends State<AccountPage> {
     );
   }
 
-  Widget containerBlock() {
-    Widget vars = Container();
-    APIService().storage.read(key: 'token').then((value) => print(value));
-    print("ACC TOKEN ${APIService().getToken}");
-    APIService().getToken.length > 2
-        ? vars = accountBodyAuth()
-        : vars = accountBody();
-    return vars;
-  }
-
-  accountBody() => Column(
+  logInBody() => Column(
         children: [
           Text(
             "Unmei",
@@ -154,16 +152,17 @@ class _AccountPageState extends State<AccountPage> {
           SizedBox(height: 16),
           TextButton(
             onPressed: () {
-              APIService().onLogin(loginController.text, passwordController.text);
-              if (APIService().getToken.length > 2) context.read<UnmeiUserCubit>().getUser();
               FocusScope.of(context).unfocus();
             },
             style: ButtonStyle(
               backgroundColor: MaterialStateProperty.all(Colors.blue),
-              shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
-              padding: MaterialStateProperty.all(EdgeInsets.symmetric(vertical: 16, horizontal: 48)),
+              shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8))),
+              padding: MaterialStateProperty.all(
+                  EdgeInsets.symmetric(vertical: 16, horizontal: 48)),
             ),
-            child: Text("Войти", style: TextStyle(fontSize: 18, color: Colors.white)),
+            child: Text("Войти",
+                style: TextStyle(fontSize: 18, color: Colors.white)),
           ),
           Container(
             margin: EdgeInsets.symmetric(vertical: 16),
@@ -220,106 +219,99 @@ class _AccountPageState extends State<AccountPage> {
       );
 
   accountBodyAuth() =>
-      BlocBuilder<UnmeiUserCubit, UnmeiUserState>(builder: (context, state) {
-        if (state is UnmeiUserInitial)
-          return Text("ERROR", style: TextStyle(color: Colors.black));
-        if (state is UnmeiUserLoad)
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Card(
-                elevation: 0,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8)),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Column(
-                      children: [
-                        SizedBox(height: 16),
-                        GestureDetector(
-                          onTap: () {
-                            APIService().removeToken();
-                          },
-                          child: Container(
-                            decoration: BoxDecoration(
-                              border: Border.all(width: 1),
-                              borderRadius: BorderRadius.circular(50),
-                            ),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(50),
-                              child: Image.network(state.user.data.avatar),
-                            ),
+      BlocBuilder<UnmeiUserBloc, UnmeiUserState>(builder: (context, state) {
+        if (state is UnmeiUserInitial) return null;
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Card(
+              elevation: 0,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8)),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Column(
+                    children: [
+                      SizedBox(height: 16),
+                      GestureDetector(
+                        onTap: () {
+                          APIService().removeToken();
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                            border: Border.all(width: 1),
+                            borderRadius: BorderRadius.circular(50),
+                          ),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(50),
+                            child: Image.network(""),
                           ),
                         ),
-                        SizedBox(height: 8),
-                        Text(
-                          "RonFall",
-                          style: TextStyle(
-                              fontSize: 22,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black),
-                        ),
-                        Text(
-                          "Android dev.",
-                          style:
-                              TextStyle(fontSize: 18, color: Color(0xFF0073FF)),
-                        ),
-                        SizedBox(height: 16),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(height: 32),
-              Text("Новеллы",
-                  style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black)),
-              Card(
-                elevation: 0,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8)),
-                child: Column(
-                  children: [
-                    SizedBox(height: 16),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        flagIcon("0", Icons.assistant_photo, 0xFF399999),
-                        flagIcon("0", Icons.check, 0xFF339933),
-                        flagIcon("0", Icons.av_timer, 0xFF993399),
-                        flagIcon("0", Icons.ac_unit, 0xFF51d4ff),
-                        flagIcon("0", Icons.not_interested, 0xFF993333),
-                      ],
-                    ),
-                    Container(
-                      margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                      color: Colors.grey[200],
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text("Весь список",
-                              style:
-                                  TextStyle(fontSize: 18, color: Colors.black)),
-                          Icon(Icons.keyboard_arrow_down_rounded),
-                        ],
                       ),
-                    ),
-                    SizedBox(height: 16),
-                  ],
-                ),
+                      SizedBox(height: 8),
+                      Text(
+                        "RonFall",
+                        style: TextStyle(
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black),
+                      ),
+                      Text(
+                        "Android dev.",
+                        style:
+                            TextStyle(fontSize: 18, color: Color(0xFF0073FF)),
+                      ),
+                      SizedBox(height: 16),
+                    ],
+                  ),
+                ],
               ),
-            ],
-          );
-        return Center(
-          child: Text(
-            "Произошла ошибка :(",
-            style: TextStyle(fontSize: 24, color: Colors.red),
-          ),
+            ),
+            SizedBox(height: 32),
+            Text(
+              "Новеллы",
+              style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black),
+            ),
+            Card(
+              elevation: 0,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8)),
+              child: Column(
+                children: [
+                  SizedBox(height: 16),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      flagIcon("0", Icons.assistant_photo, 0xFF399999),
+                      flagIcon("0", Icons.check, 0xFF339933),
+                      flagIcon("0", Icons.av_timer, 0xFF993399),
+                      flagIcon("0", Icons.ac_unit, 0xFF51d4ff),
+                      flagIcon("0", Icons.not_interested, 0xFF993333),
+                    ],
+                  ),
+                  Container(
+                    margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    color: Colors.grey[200],
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text("Весь список",
+                            style:
+                                TextStyle(fontSize: 18, color: Colors.black)),
+                        Icon(Icons.keyboard_arrow_down_rounded),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 16),
+                ],
+              ),
+            ),
+          ],
         );
       });
 

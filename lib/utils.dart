@@ -4,7 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-setDateTimeFull(String date, int utc) => DateFormat("dd.MM.yyyy, HH:mm:ss")
+setDateTimeFull(String date, int utc) => DateFormat("dd.MM.yyyy в HH:mm")
     .format(DateTime.parse(date).add(Duration(hours: utc)));
 
 setDateTimeYear(String date) => DateFormat("yyyy").format(DateTime.parse(date));

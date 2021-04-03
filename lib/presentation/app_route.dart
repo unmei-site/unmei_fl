@@ -25,10 +25,6 @@ class AppRouter {
         return MaterialPageRoute(
           builder: (_) => SettingsPage(),
         );
-      case '/novel_card':
-        return MaterialPageRoute(
-          builder: (_) => NovelItemPage(),
-        );
       default:
         return null;
     }

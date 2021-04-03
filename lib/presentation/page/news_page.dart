@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:unmei_fl/logic/cubit/news/unmei_news_cubit.dart';
 import 'package:unmei_fl/presentation/widget/news_item_widget.dart';
-import 'package:unmei_fl/presentation/widget/utils_widget.dart';
+
+import '../../utils.dart';
 
 class NewsPage extends StatefulWidget {
   @override
@@ -10,7 +12,6 @@ class NewsPage extends StatefulWidget {
 }
 
 class _NewsPageState extends State<NewsPage> {
-
   @override
   void initState() {
     super.initState();
@@ -19,40 +20,38 @@ class _NewsPageState extends State<NewsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Colors.blue,
-      child: ListView(
-        children: <Widget>[
-          pageHeader("Новости", context),
-          Container(
-            height: MediaQuery.of(context).size.height,
-            margin: const EdgeInsets.only(top: 20),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(30),
-                topRight: Radius.circular(30),
-              ),
-            ),
-            child: Container(
-              width: double.infinity,
-              height: MediaQuery.of(context).size.height,
-              child: BlocBuilder<UnmeiNewsCubit, UnmeiNewsState>(
-                builder: (context, state) {
-                  if (state is UnmeiNewsInitial) return NewsItemShimmer();
-                  if (state is UnmeiNewsLoaded) return NewsItem(newsList: state.news);
-                  return Center(
-                    child: Text(
-                      "Произошла ошибка :(",
-                      style: TextStyle(fontSize: 24, color: Colors.red),
-                    ),
-                  );
-                }
-              ),
+    return Scaffold(
+      appBar: AppBar(
+        leading: Container(
+          margin: EdgeInsets.all(5),
+          decoration: BoxDecoration(
+            border: Border.all(width: 1),
+            borderRadius: BorderRadius.circular(50),
+          ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(50),
+            child: GestureDetector(
+              onTap: () => showToast(context, "Входить в аккаунт пока нельзя ☹️", Colors.red[900], Icons.cancel),
+              child: SvgPicture.asset("assets/icons/user.svg"),
             ),
           ),
-        ],
+        ),
+        title: Text("Новости", style: TextStyle(fontSize: 32, color: Colors.black)),
+        elevation: 0,
+        centerTitle: true,
       ),
+      backgroundColor: Colors.grey[100],
+      body: BlocBuilder<UnmeiNewsCubit, UnmeiNewsState>(
+          builder: (context, state) {
+        if (state is UnmeiNewsLoading) return NewsItemShimmer();
+        if (state is UnmeiNewsLoaded) return NewsItem(newsList: state.news);
+        return Center(
+          child: Text(
+            "Произошла ошибка :(",
+            style: TextStyle(fontSize: 24, color: Colors.red),
+          ),
+        );
+      }),
     );
   }
 }

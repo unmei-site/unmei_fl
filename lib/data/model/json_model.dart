@@ -96,7 +96,6 @@ class Novels implements DataResponse {
 
   Novels({this.error, this.data});
 
-  @override
   fromJson(Map<String, dynamic> json) {
     error = json['error'];
     if (json['data'] != null) {
@@ -110,7 +109,7 @@ class Novels implements DataResponse {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['error'] = this.error;
-    if (this.data != null && this.data.length != null) {
+    if (this.data != null) {
       data['data'] = this.data.map((v) => v.toJson()).toList();
     }
     return data;
@@ -125,15 +124,25 @@ class NovelsData {
   String image;
   int rating;
   String releaseDate;
+  int duration;
+  String exitStatus;
+  String platforms;
+  Null genres;
+  Null links;
 
   NovelsData(
       {this.id,
-      this.originalName,
-      this.localizedName,
-      this.description,
-      this.image,
-      this.rating,
-      this.releaseDate});
+        this.originalName,
+        this.localizedName,
+        this.description,
+        this.image,
+        this.rating,
+        this.releaseDate,
+        this.duration,
+        this.exitStatus,
+        this.platforms,
+        this.genres,
+        this.links});
 
   NovelsData.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -143,6 +152,11 @@ class NovelsData {
     image = json['image'];
     rating = json['rating'];
     releaseDate = json['release_date'];
+    duration = json['duration'];
+    exitStatus = json['exit_status'];
+    platforms = json['platforms'];
+    genres = json['genres'];
+    links = json['links'];
   }
 
   Map<String, dynamic> toJson() {
@@ -154,6 +168,11 @@ class NovelsData {
     data['image'] = this.image;
     data['rating'] = this.rating;
     data['release_date'] = this.releaseDate;
+    data['duration'] = this.duration;
+    data['exit_status'] = this.exitStatus;
+    data['platforms'] = this.platforms;
+    data['genres'] = this.genres;
+    data['links'] = this.links;
     return data;
   }
 }
