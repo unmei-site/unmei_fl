@@ -1,22 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 
-pageHeader(String text, context) => Container(
-      margin: const EdgeInsets.only(top: 20),
-      child: Text(
-        text,
-        textAlign: TextAlign.center,
-        style: Theme.of(context).textTheme.bodyText1,
-      ),
-    );
-
-onShim(double height, double width, EdgeInsets margin) => Shimmer.fromColors(
-      baseColor: Colors.grey,
-      highlightColor: Colors.grey[200],
-      child: Container(
-        margin: margin,
-        height: height,
-        width: width,
-        color: Colors.white,
-      ),
-    );
+onBoxShim({
+  double height = 40,
+  double width = 40,
+  EdgeInsets margin = const EdgeInsets.all(0),
+  double radius = 0,
+  Color bodyColor = const Color(0xFFB3B3B3),
+  Color color = const Color(0xFFDBDBDB),
+}) => Shimmer.fromColors(
+  baseColor: bodyColor,
+  highlightColor: color,
+  child: Container(
+    margin: margin,
+    height: height,
+    width: width,
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(radius),
+    ),
+  ),
+);

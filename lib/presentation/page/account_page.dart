@@ -30,56 +30,34 @@ class _AccountPageState extends State<AccountPage> {
   }
 
   @override
-  void dispose() {
-    super.dispose();
-    FocusScope.of(context).unfocus();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: Container(
-          margin: EdgeInsets.all(5),
-          decoration: BoxDecoration(
-            border: Border.all(width: 1),
-            borderRadius: BorderRadius.circular(50),
-          ),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(50),
-            child: Image.network("https://www.gravatar.com/avatar/c5e477032a2174c64323a91856d6b178"),
-          ),
+        leading: GestureDetector(
+          onTap: () => Navigator.pop(context),
+          child: Icon(Icons.arrow_back, color: Colors.black),
         ),
         title: Text("Аккаунт", style: TextStyle(fontSize: 32, color: Colors.black)),
         elevation: 0,
         centerTitle: true,
       ),
+      resizeToAvoidBottomInset: false,
       backgroundColor: Colors.grey[100],
-      body: Container(
-        margin: EdgeInsets.symmetric(horizontal: 16),
-        child: Center(
-          child: ListView(
-            children: [
-              // BlocListener<UnmeiUserAuthBloc, UnmeiUserAuthState>(
-              //     listener: (context, state) {
-              //       switch (state.status) {
-              //         case AuthStatus.authenticated:
-              //           accountBodyAuth();
-              //           break;
-              //         case AuthStatus.unauthenticated:
-              //           logInBody();
-              //           break;
-              //         default: break;
-              //       }
-              //     }),
-            ],
+      body: SingleChildScrollView(
+        child: Container(
+          margin: EdgeInsets.symmetric(horizontal: 16),
+          child: Center(
+            child: loginBody(),
           ),
         ),
       ),
     );
   }
 
-  logInBody() => Column(
+  loginBody() => Column(
+    children: [
+      SizedBox(height: MediaQuery.of(context).size.height/24),
+      Column(
         children: [
           Text(
             "Unmei",
@@ -87,13 +65,15 @@ class _AccountPageState extends State<AccountPage> {
                 fontSize: 36,
                 fontWeight: FontWeight.w100,
                 color: Colors.black,
-                decoration: TextDecoration.underline),
+                decoration: TextDecoration.underline,
+            ),
           ),
-          SizedBox(height: 16),
+          SizedBox(height: 4),
+          SvgPicture.asset("assets/icons/user.svg", height: 128),
+          SizedBox(height: 4),
           Text(
             "С возвращением!",
-            style: TextStyle(
-                fontSize: 24, fontWeight: FontWeight.bold, color: Colors.black),
+            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.black),
           ),
           SizedBox(height: 8),
           Text(
@@ -142,32 +122,32 @@ class _AccountPageState extends State<AccountPage> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                Text("Забыли пароль?",
-                    style: TextStyle(fontSize: 14, color: Colors.black)),
+                Text("Забыли пароль?", style: TextStyle(fontSize: 14, color: Colors.black)),
                 SizedBox(width: 4),
                 Icon(Icons.lock_open, size: 18),
               ],
             ),
           ),
-          SizedBox(height: 16),
+        ],
+      ),
+      SizedBox(height: MediaQuery.of(context).size.height/24),
+      Column(
+        children: [
           TextButton(
             onPressed: () {
+              APIService().onLogin(context, login: loginController.text, pass: passwordController.text);
               FocusScope.of(context).unfocus();
             },
             style: ButtonStyle(
               backgroundColor: MaterialStateProperty.all(Colors.blue),
-              shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8))),
-              padding: MaterialStateProperty.all(
-                  EdgeInsets.symmetric(vertical: 16, horizontal: 48)),
+              shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
+              padding: MaterialStateProperty.all(EdgeInsets.symmetric(vertical: 16, horizontal: 48)),
             ),
-            child: Text("Войти",
-                style: TextStyle(fontSize: 18, color: Colors.white)),
+            child: Text("Войти", style: TextStyle(fontSize: 18, color: Colors.white)),
           ),
           Container(
             margin: EdgeInsets.symmetric(vertical: 16),
-            child:
-                Text("или", style: TextStyle(fontSize: 16, color: Colors.grey)),
+            child: Text("или", style: TextStyle(fontSize: 16, color: Colors.grey)),
           ),
           TextButton(
             onPressed: () {
@@ -176,17 +156,17 @@ class _AccountPageState extends State<AccountPage> {
             },
             style: ButtonStyle(
               backgroundColor: MaterialStateProperty.all(Colors.blue),
-              shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8))),
-              padding: MaterialStateProperty.all(
-                  EdgeInsets.symmetric(vertical: 16, horizontal: 48)),
+              shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
+              padding: MaterialStateProperty.all(EdgeInsets.symmetric(vertical: 16, horizontal: 48)),
             ),
-            child: Text("Зарегистрироваться",
-                style: TextStyle(fontSize: 18, color: Colors.white)),
+            child: Text("Зарегистрироваться", style: TextStyle(fontSize: 18, color: Colors.white)),
           ),
-          SizedBox(height: 48),
-          Text("Посетите нас на других платформах!",
-              style: TextStyle(fontSize: 14, color: Colors.grey)),
+        ],
+      ),
+      SizedBox(height: MediaQuery.of(context).size.height/24),
+      Column(
+        children: [
+          Text("Посетите нас на других платформах!", style: TextStyle(fontSize: 14, color: Colors.grey)),
           SizedBox(height: 8),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -214,9 +194,10 @@ class _AccountPageState extends State<AccountPage> {
               ),
             ],
           ),
-          SizedBox(height: 16),
         ],
-      );
+      ),
+    ],
+  );
 
   accountBodyAuth() =>
       BlocBuilder<UnmeiUserBloc, UnmeiUserState>(builder: (context, state) {

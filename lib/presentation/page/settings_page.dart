@@ -1,7 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:unmei_fl/presentation/widget/utils_widget.dart';
 
 import '../../utils.dart';
 
@@ -21,51 +18,31 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: Container(
-          margin: EdgeInsets.all(5),
-          decoration: BoxDecoration(
-            border: Border.all(width: 1),
-            borderRadius: BorderRadius.circular(50),
-          ),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(50),
-            child: GestureDetector(
-              onTap: () => showToast(context, "Входить в аккаунт пока нельзя 😧", Colors.red[900], Icons.cancel),
-              child: SvgPicture.asset("assets/icons/user.svg"),
-            ),
-          ),
-        ),
-        title: Text("Настройки", style: TextStyle(fontSize: 32, color: Colors.black)),
-        elevation: 0,
-        centerTitle: true,
-      ),
       backgroundColor: Colors.grey[100],
       body: SingleChildScrollView(
         child: Container(
           margin: EdgeInsets.symmetric(horizontal: 16),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Container(
-                    child: Text(
-                      "Включить уведомления",
-                      style: Theme.of(context).primaryTextTheme.bodyText1,
-                    ),
-                  ),
-                  Switch(
-                    value: switchNotificationsBtn,
-                    onChanged: (btn) {
-                      setState(() {
-                        switchNotificationsBtn = !switchNotificationsBtn;
-                      });
-                      showToast(context, "Еще не сделали 😢", Colors.red[900], Icons.cancel);
-                    },
-                    activeColor: Color(0xFFeb3838),
-                  ),
-                ],
+              SizedBox(height: 16),
+              Text("Основные", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black)),
+              Container(
+                margin: EdgeInsets.only(left: 8),
+                child: Column(
+                  children: [
+                    settingLine(
+                        label: "Включить уведомления",
+                        icon: Icons.notifications,
+                        onChanged: (st) {
+                          setState(() {
+                            switchNotificationsBtn = !switchNotificationsBtn;
+                          });
+                          showToast(context, "Еще не сделали 😢", Colors.red[900], Icons.cancel);
+                        }),
+                    settingLine(label: "Какой-то переключатель"),
+                  ],
+                ),
               ),
             ],
           ),
@@ -73,4 +50,27 @@ class _SettingsPageState extends State<SettingsPage> {
       ),
     );
   }
+
+  settingLine({String label = "No label", IconData icon = Icons.cancel, ValueChanged<bool> onChanged}) => Row(
+    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    children: [
+      Row(
+        children: [
+          Icon(icon, size: 20),
+          SizedBox(width: 8),
+          Container(
+            child: Text(
+              label,
+              style: TextStyle(fontSize: 16, color: Colors.black),
+            ),
+          ),
+        ],
+      ),
+      Switch(
+        value: switchNotificationsBtn,
+        onChanged: onChanged,
+        activeColor: Color(0xFFeb3838),
+      ),
+    ],
+  );
 }

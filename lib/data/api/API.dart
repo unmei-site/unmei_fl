@@ -1,18 +1,23 @@
 import 'dart:async';
 import 'dart:io';
+
+import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio/dio.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:unmei_fl/data/model/json_model.dart';
+import 'package:unmei_fl/utils.dart';
 
 class APIService {
 
   final Dio client = Dio();
+
+  final String url = "https://api.unmei.space/v1/";
+
   PersistCookieJar persistentCookies;
   final storage = FlutterSecureStorage();
-  final String url = "https://api.unmei.space/v1/";
 
   String _token = "";
   String get getToken => _token;
@@ -30,11 +35,11 @@ class APIService {
     );
     final Directory dir = await _localCookieDirectory;
     final cookiePath = dir.path;
-    persistentCookies = new PersistCookieJar();
+    persistentCookies = new PersistCookieJar(storage: FileStorage(cookiePath));
     client.interceptors.add(CookieManager(persistentCookies));
   }
 
-  onLogin(String login, String pass) async {
+  onLogin(context, {String login, String pass}) async {
     try {
       init();
       final formData = {
@@ -43,23 +48,29 @@ class APIService {
       };
       Response response = await client.post("auth/login?auth_type=token", data: formData);
       var request = response.data;
+
+      if (response.statusCode == 200) {
+        showToast(context, "Добро пожаловать!", Colors.lightGreen[700], Icons.done);
+        Navigator.of(context).pop();
+      }
       await storage.write(key: 'token', value: request['data']);
       _token = await storage.read(key: 'token');
       print("TOKEN " + _token);
       print("DATA ${response.data}");
     } on DioError catch(e) {
       if (e.response != null) {
-        print( e.response.statusCode.toString() + " " + e.response.statusMessage);
-        print(e.response.data);
-        print(e.response.headers);
-        print(e.response.requestOptions);
+        print(e.response.statusCode.toString() + " " + e.response.statusMessage);
+        print("Data body: ${e.response.data}");
+        print("Headers: [ ${e.response.headers} ]");
+        print("Options: ${e.response.requestOptions}");
+        showToast(context, "Неверный логин и/или пароль!", Colors.red[700], Icons.done);
       } else {
-        print(e.requestOptions);
-        print(e.message);
+        print("Request options: ${e.requestOptions}");
+        print("Error message: ${e.message}");
       }
     }
     catch (error, stacktrace) {
-      print("Exception occured: $error stackTrace: $stacktrace");
+      print("Exception occurred: $error stackTrace: $stacktrace");
       return null;
     }
   }
@@ -72,7 +83,7 @@ class APIService {
       completer.complete(cls);
       return completer.future;
     } else {
-      print(response.data);
+      print("Error from getting Data: ${response.data}");
       throw Exception('Failed to load data');
     }
   }

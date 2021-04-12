@@ -5,7 +5,7 @@ import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:unmei_fl/presentation/app_route.dart';
 import 'package:unmei_fl/presentation/theme.dart';
-import 'package:unmei_fl/presentation/widget/bottom_nav_widget.dart';
+import 'file:///C:/Project/Flutter/unmei_fl/lib/presentation/page/home_page.dart';
 
 import 'logic/bloc/user/unmei_user_bloc.dart';
 import 'logic/cubit/news/unmei_news_cubit.dart';
@@ -48,7 +48,7 @@ class App extends StatelessWidget {
               create: (userContext) => UnmeiUserBloc(),
             ),
           ],
-          child: BottomNavigation(),
+          child: HomePage(),
         ),
       ),
     );

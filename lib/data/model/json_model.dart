@@ -127,8 +127,8 @@ class NovelsData {
   int duration;
   String exitStatus;
   String platforms;
-  Null genres;
-  Null links;
+  List<Genres> genres;
+  List<Links> links;
 
   NovelsData(
       {this.id,
@@ -155,8 +155,18 @@ class NovelsData {
     duration = json['duration'];
     exitStatus = json['exit_status'];
     platforms = json['platforms'];
-    genres = json['genres'];
-    links = json['links'];
+    if (json['genres'] != null) {
+      genres = <Genres>[];
+      json['genres'].forEach((v) {
+        genres.add(new Genres.fromJson(v));
+      });
+    }
+    if (json['links'] != null) {
+      links = <Links>[];
+      json['links'].forEach((v) {
+        links.add(new Links.fromJson(v));
+      });
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -171,8 +181,59 @@ class NovelsData {
     data['duration'] = this.duration;
     data['exit_status'] = this.exitStatus;
     data['platforms'] = this.platforms;
-    data['genres'] = this.genres;
-    data['links'] = this.links;
+    if (this.genres != null) {
+      data['genres'] = this.genres.map((v) => v.toJson()).toList();
+    }
+    if (this.links != null) {
+      data['links'] = this.links.map((v) => v.toJson()).toList();
+    }
+    return data;
+  }
+}
+
+class Genres {
+  int id;
+  String name;
+  String localizedName;
+
+  Genres({this.id, this.name, this.localizedName});
+
+  Genres.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    name = json['name'];
+    localizedName = json['localized_name'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['name'] = this.name;
+    data['localized_name'] = this.localizedName;
+    return data;
+  }
+}
+
+class Links {
+  int novelId;
+  String name;
+  String link;
+  String type;
+
+  Links({this.novelId, this.name, this.link, this.type});
+
+  Links.fromJson(Map<String, dynamic> json) {
+    novelId = json['novel_id'];
+    name = json['name'];
+    link = json['link'];
+    type = json['type'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['novel_id'] = this.novelId;
+    data['name'] = this.name;
+    data['link'] = this.link;
+    data['type'] = this.type;
     return data;
   }
 }

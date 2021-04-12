@@ -28,15 +28,23 @@ class NovelItemPage extends StatelessWidget {
                     children: [
                       Icon(Icons.arrow_back, size: 18, color: Colors.white),
                       SizedBox(width: 4),
-                      Text("Назад",
-                          style: TextStyle(fontSize: 16, color: Colors.white)),
+                      Text(
+                        "Назад",
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.white,
+                        ),
+                      ),
                     ],
                   ),
                 ),
                 SizedBox(height: 16),
                 ClipRRect(
                   borderRadius: BorderRadius.circular(16),
-                  child: novelsList.data[index].image.length > 10 ? Image.network(novelsList.data[index].image) : Image.asset("assets/images/no_image.png"),
+                  child: novelsList.data[index].image.length > 10
+                      ? Image.network(novelsList.data[index].image)
+                      : Image.asset("assets/images/no_image.png",
+                  ),
                 ),
                 SizedBox(height: 16),
                 Row(
@@ -45,14 +53,21 @@ class NovelItemPage extends StatelessWidget {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(novelsList.data[index].originalName,
-                            style: TextStyle(
-                                fontSize: 22,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white)),
-                        Text(novelsList.data[index].localizedName,
-                            style:
-                                TextStyle(fontSize: 14, color: Colors.white)),
+                        Text(
+                          novelsList.data[index].originalName,
+                          style: TextStyle(
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                        Text(
+                          novelsList.data[index].localizedName,
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.white,
+                          ),
+                        ),
                       ],
                     ),
                     Container(
@@ -60,8 +75,9 @@ class NovelItemPage extends StatelessWidget {
                       decoration: BoxDecoration(
                         color: Color(0xFFe3983d),
                         borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(8),
-                            bottomRight: Radius.circular(8)),
+                          topLeft: Radius.circular(8),
+                          bottomRight: Radius.circular(8),
+                        ),
                       ),
                       child: Row(
                         children: [
@@ -88,19 +104,24 @@ class NovelItemPage extends StatelessWidget {
           Row(
             children: [
               Container(
-                  padding: EdgeInsets.all(8),
-                  margin: EdgeInsets.only(left: 8),
-                  decoration: BoxDecoration(
-                    color: Color(0xFF155ad1),
-                    borderRadius: BorderRadius.only(
-                        topRight: Radius.circular(8),
-                        bottomLeft: Radius.circular(8)),
+                padding: EdgeInsets.all(8),
+                margin: EdgeInsets.only(left: 8),
+                decoration: BoxDecoration(
+                  color: Color(0xFF155ad1),
+                  borderRadius: BorderRadius.only(
+                    topRight: Radius.circular(8),
+                    bottomLeft: Radius.circular(8),
                   ),
-                  child: Text("Краткая справка: ",
-                      style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white))),
+                ),
+                child: Text(
+                  "Краткая справка: ",
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
             ],
           ),
           SizedBox(height: 8),
@@ -115,17 +136,11 @@ class NovelItemPage extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  textStyle("Год выпуска: ",
-                      "${setDateTimeYear(novelsList.data[index].releaseDate)}"),
-                  textStyle("Жанр: ", "${novelsList.data[index].genres}"),
-                  textStyle("Продолжительность: ",
-                      "${novelsList.data[index].duration}"),
-                  textStyle("Статус: ",
-                      "${statusConvert(novelsList.data[index].exitStatus)}"),
-                  textStyle(
-                      "Платформы: ", "${novelsList.data[index].platforms}"),
-                  textStyle(
-                      "Ваша оценка: ", "${novelsList.data[index].rating}"),
+                  textStyle("Год выпуска: ", "${setDateTimeYear(novelsList.data[index].releaseDate)}"),
+                  genresConvert("Жанр: ", novelsList.data[index].genres),
+                  textStyle("Продолжительность: ", "${novelsList.data[index].duration}"),
+                  textStyle("Статус: ", "${statusConvert(novelsList.data[index].exitStatus)}"),
+                  // textStyle("Платформы: ", "${novelsList.data[index].platforms}"),
                 ],
               ),
             ),
@@ -146,9 +161,10 @@ class NovelItemPage extends StatelessWidget {
                 child: Text(
                   "Описание: ",
                   style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white),
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
                 ),
               ),
             ],
@@ -164,7 +180,10 @@ class NovelItemPage extends StatelessWidget {
               margin: EdgeInsets.all(16),
               child: Text(
                 "${novelsList.data[index].description}",
-                style: TextStyle(fontSize: 16, color: Colors.black),
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.black,
+                ),
               ),
             ),
           ),
@@ -189,8 +208,37 @@ class NovelItemPage extends StatelessWidget {
     return Row(children: asset);
   }
 
+  genresConvert(String textMain, List<Genres> genres) => Container(
+        margin: EdgeInsets.symmetric(vertical: 4),
+        child: Row(
+          children: [
+            Text(
+              textMain,
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+                color: Color(0xFF155ad1),
+              ),
+            ),
+            Container(
+              padding: EdgeInsets.all(4),
+              decoration: BoxDecoration(color: Color(0xFF9915d1)),
+              child: Row(
+                children: [
+                  if (genres != null) for (var item in genres) Text(item.name)
+                ],
+              ),
+            ),
+          ],
+        ),
+      );
+
   String statusConvert(String text) {
+    if (text == "in_developing") return "В разработке";
     if (text == "came_out") return "Вышло";
+    if (text == "canceled") return "Отменено";
+    if (text == "announcement") return "Анонс";
+    if (text == "postponed") return "Перенесено";
     return "";
   }
 

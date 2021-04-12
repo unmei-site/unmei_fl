@@ -10,7 +10,7 @@ class UnmeiNovelsCubit extends Cubit<UnmeiNovelsState> {
 
   Novels novels;
 
-  void getNovels(String text) async {
+  void getNovels({String text = ""}) async {
     novels = await APIService().getNetworkData(Novels(), "novels?q=$text");
     emit(UnmeiNovelsLoad(novels: novels));
   }
