@@ -21,11 +21,11 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBar(context, label: colorItem()),
+      appBar: appBar(context, label: selectedItemParams()),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
         items: _navBarsItems(),
-        selectedItemColor: Color(int.parse(colorItem(choose: "color"))),
+        selectedItemColor: Color(int.parse(selectedItemParams(choose: "color"))),
         onTap: (index) {
           setState(() {
             _selectedIndex = index;
@@ -36,7 +36,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  String colorItem({String choose = "name"}) {
+  String selectedItemParams({String choose = "name"}) {
     String name = "";
     switch (_selectedIndex) {
       case 0: name = choose == "color" ? "0xFF3f85ff" : "Новости";

@@ -10,3 +10,9 @@ class UnmeiNewsLoaded extends UnmeiNewsState {
 
   UnmeiNewsLoaded({this.news});
 }
+
+class UnmeiNewsError extends UnmeiNewsState {
+  final String error;
+
+  UnmeiNewsError({this.error});
+}

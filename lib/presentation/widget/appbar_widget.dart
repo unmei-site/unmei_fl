@@ -21,7 +21,7 @@ appBar(BuildContext context, {String label = "PAGE"}) => AppBar(
     mainAxisAlignment: MainAxisAlignment.spaceBetween,
     children: [
       Text(label, style: TextStyle(fontSize: 32, color: Colors.black)),
-      Icon(Icons.arrow_forward, size: 22, color: Colors.black),
+      Icon(Icons.logout, size: 28, color: Colors.black),
     ],
   ),
   elevation: 0,
