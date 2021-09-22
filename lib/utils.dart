@@ -10,10 +10,8 @@ setDateTimeFull(String date, int utc) => DateFormat("dd.MM.yyyy в HH:mm")
 setDateTimeYear(String date) => DateFormat("yyyy").format(DateTime.parse(date));
 
 launchURL(String url) async {
-  if (await canLaunch(url))
-    await launch(url);
-  else
-    throw 'Could not launch $url';
+  if (await canLaunch(url)) await launch(url);
+  else throw 'Could not launch $url';
 }
 
 var fToast = FToast();
@@ -30,17 +28,9 @@ showToast(context, String msg, Color color, IconData icon) {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(
-            icon,
-            color: Colors.white,
-          ),
-          SizedBox(
-            width: 12.0,
-          ),
-          Text(
-            msg,
-            style: TextStyle(color: Colors.white),
-          ),
+          Icon(icon, color: Colors.white),
+          SizedBox(width: 12.0),
+          Text(msg, style: TextStyle(color: Colors.white)),
         ],
       ),
     ),

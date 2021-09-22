@@ -1,41 +1,25 @@
 import 'package:flutter/material.dart';
-
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:unmei_fl/data/model/json_model.dart';
-import 'package:unmei_fl/logic/cubit/novels/unmei_novels_cubit.dart';
-import 'package:unmei_fl/presentation/widget/novel_item_widget.dart';
+import 'package:unmei_fl/data/model/novels_model.dart';
 import 'package:unmei_fl/presentation/widget/utils_widget.dart';
 
-import 'loader_widget.dart';
+import '../loader_widget.dart';
 
-class NovelCard extends StatefulWidget {
+class NovelCard extends StatelessWidget {
 
   final Novels novels;
+  NovelCard({required this.novels});
 
-  const NovelCard({this.novels});
-
-  @override
-  _NovelCardState createState() => _NovelCardState();
-}
-
-class _NovelCardState extends State<NovelCard> {
   final searchController = TextEditingController();
-
-  @override
-  void initState() {
-    super.initState();
-    loadNovels();
-  }
-
-  loadNovels() {
-    context.read<UnmeiNovelsCubit>().getNovels(text: searchController.text);
-  }
 
   @override
   Widget build(BuildContext context) {
     return LoaderWidget(
       indicatorColor: Color(0xFF9915d1),
-      onRefresh: () => loadNovels(),
+      onRefresh: () {
+        Future.delayed(Duration(milliseconds: 1500), () {
+          // return context.refresh(novelsProvider(""));
+        });
+      },
       child: Container(
         color: Colors.grey[100],
         child: Column(
@@ -53,11 +37,14 @@ class _NovelCardState extends State<NovelCard> {
                 border: InputBorder.none,
               ),
               controller: searchController,
-              onChanged: (text) => loadNovels(),
+              onEditingComplete: () {
+                // context.read(novelsProvider(searchController.text));
+                FocusScope.of(context).unfocus();
+              },
             ),
             Expanded(
               child: ListView.builder(
-                itemCount: widget.novels.data.length,
+                itemCount: novels.data!.length,
                 itemBuilder: (context, index) => Container(
                   margin: EdgeInsets.only(top: 16, right: 16, left: 16),
                   padding: EdgeInsets.all(8),
@@ -66,7 +53,8 @@ class _NovelCardState extends State<NovelCard> {
                     color: Color(0xFFa338eb),
                   ),
                   child: GestureDetector(
-                    onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => NovelItemPage(index: index, novelsList: widget.novels))),
+                    // onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) =>
+                    //     NovelItemPage(id: novels.data[index].id))),
                     child: Row(
                       children: [
                         Stack(
@@ -75,7 +63,7 @@ class _NovelCardState extends State<NovelCard> {
                               borderRadius: BorderRadius.circular(8),
                               child: Container(
                                 width: 150,
-                                child: widget.novels.data[index].image.length > 10 ? Image.network(widget.novels.data[index].image) : Image.asset("assets/images/no_image.png"),
+                                child: novels.data![index].image.length > 10 ? Image.network(novels.data![index].image) : Image.asset("assets/images/no_image.png"),
                               ),
                             ),
                             Container(
@@ -89,7 +77,7 @@ class _NovelCardState extends State<NovelCard> {
                                   Icon(Icons.star, size: 14, color: Colors.white),
                                   SizedBox(width: 2),
                                   Text(
-                                    widget.novels.data[index].rating.toString(),
+                                    novels.data![index].rating.toString(),
                                     style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.white),
                                   ),
                                 ],
@@ -101,11 +89,11 @@ class _NovelCardState extends State<NovelCard> {
                           child: Column(
                             children: [
                               Text(
-                                widget.novels.data[index].originalName,
+                                novels.data![index].originalName,
                                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white,),
                               ),
                               Text(
-                                widget.novels.data[index].localizedName,
+                                novels.data![index].localizedName,
                                 textAlign: TextAlign.center,
                                 style: TextStyle(fontSize: 12, color: Colors.white,),
                               ),
@@ -123,10 +111,10 @@ class _NovelCardState extends State<NovelCard> {
       ),
     );
   }
-
 }
 
 class NovelCardShimmer extends StatelessWidget {
+
   @override
   Widget build(BuildContext context) {
     return Container(

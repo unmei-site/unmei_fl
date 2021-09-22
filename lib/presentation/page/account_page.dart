@@ -1,9 +1,6 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:unmei_fl/data/api/API.dart';
-import 'package:unmei_fl/logic/bloc/user/unmei_user_bloc.dart';
 
 import '../../utils.dart';
 
@@ -13,11 +10,11 @@ class AccountPage extends StatefulWidget {
 }
 
 class _AccountPageState extends State<AccountPage> {
-  TextEditingController loginController;
-  TextEditingController passwordController;
+  late TextEditingController loginController;
+  late TextEditingController passwordController;
 
-  bool isFocusedLogin;
-  bool isFocusedPass;
+  late bool isFocusedLogin;
+  late bool isFocusedPass;
 
   @override
   void initState() {
@@ -190,7 +187,7 @@ class _AccountPageState extends State<AccountPage> {
                 url: "https://discord.gg/4CA8Cju",
                 icon: "assets/icons/discord.svg",
                 color: 0xFF7289DA,
-                edge: null,
+                edge: null!,
               ),
             ],
           ),
@@ -199,102 +196,97 @@ class _AccountPageState extends State<AccountPage> {
     ],
   );
 
-  accountBodyAuth() =>
-      BlocBuilder<UnmeiUserBloc, UnmeiUserState>(builder: (context, state) {
-        if (state is UnmeiUserInitial) return null;
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+  accountBodyAuth() => Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Card(
+        elevation: 0,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Card(
-              elevation: 0,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8)),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Column(
-                    children: [
-                      SizedBox(height: 16),
-                      GestureDetector(
-                        onTap: () {
-                          APIService().removeToken();
-                        },
-                        child: Container(
-                          decoration: BoxDecoration(
-                            border: Border.all(width: 1),
-                            borderRadius: BorderRadius.circular(50),
-                          ),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(50),
-                            child: Image.network(""),
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 8),
-                      Text(
-                        "RonFall",
-                        style: TextStyle(
-                            fontSize: 22,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black),
-                      ),
-                      Text(
-                        "Android dev.",
-                        style:
-                            TextStyle(fontSize: 18, color: Color(0xFF0073FF)),
-                      ),
-                      SizedBox(height: 16),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(height: 32),
-            Text(
-              "Новеллы",
-              style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black),
-            ),
-            Card(
-              elevation: 0,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8)),
-              child: Column(
-                children: [
-                  SizedBox(height: 16),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      flagIcon("0", Icons.assistant_photo, 0xFF399999),
-                      flagIcon("0", Icons.check, 0xFF339933),
-                      flagIcon("0", Icons.av_timer, 0xFF993399),
-                      flagIcon("0", Icons.ac_unit, 0xFF51d4ff),
-                      flagIcon("0", Icons.not_interested, 0xFF993333),
-                    ],
-                  ),
-                  Container(
-                    margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                    color: Colors.grey[200],
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text("Весь список",
-                            style:
-                                TextStyle(fontSize: 18, color: Colors.black)),
-                        Icon(Icons.keyboard_arrow_down_rounded),
-                      ],
+            Column(
+              children: [
+                SizedBox(height: 16),
+                GestureDetector(
+                  onTap: () {
+                    APIService().removeToken();
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(width: 1),
+                      borderRadius: BorderRadius.circular(50),
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(50),
+                      child: Image.network(""),
                     ),
                   ),
-                  SizedBox(height: 16),
+                ),
+                SizedBox(height: 8),
+                Text(
+                  "RonFall",
+                  style: TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black),
+                ),
+                Text(
+                  "Android dev.",
+                  style:
+                  TextStyle(fontSize: 18, color: Color(0xFF0073FF)),
+                ),
+                SizedBox(height: 16),
+              ],
+            ),
+          ],
+        ),
+      ),
+      SizedBox(height: 32),
+      Text(
+        "Новеллы",
+        style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            color: Colors.black),
+      ),
+      Card(
+        elevation: 0,
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8)),
+        child: Column(
+          children: [
+            SizedBox(height: 16),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                flagIcon("0", Icons.assistant_photo, 0xFF399999),
+                flagIcon("0", Icons.check, 0xFF339933),
+                flagIcon("0", Icons.av_timer, 0xFF993399),
+                flagIcon("0", Icons.ac_unit, 0xFF51d4ff),
+                flagIcon("0", Icons.not_interested, 0xFF993333),
+              ],
+            ),
+            Container(
+              margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              color: Colors.grey[200],
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text("Весь список",
+                      style:
+                      TextStyle(fontSize: 18, color: Colors.black)),
+                  Icon(Icons.keyboard_arrow_down_rounded),
                 ],
               ),
             ),
+            SizedBox(height: 16),
           ],
-        );
-      });
+        ),
+      ),
+    ],
+  );
 
   flagIcon(String n, IconData icon, int color) => Column(
         children: [
@@ -308,13 +300,13 @@ class _AccountPageState extends State<AccountPage> {
       );
 
   textFiledForm(
-          {TextEditingController controller,
-          String label,
-          IconData icon,
-          TextInputType inputType,
-          TextInputAction action,
+          {required TextEditingController controller,
+          required String label,
+          required IconData icon,
+          required TextInputType inputType,
+          required TextInputAction action,
           bool hideText = false,
-          bool isOn}) =>
+          required bool isOn}) =>
       TextFormField(
         controller: controller,
         keyboardType: inputType,
@@ -346,11 +338,11 @@ class _AccountPageState extends State<AccountPage> {
       );
 
   accSocialIcon(
-          {String url,
-          String icon,
-          String label,
-          int color,
-          EdgeInsets edge}) =>
+          {required String url,
+          required String icon,
+          required String label,
+          required int color,
+          required EdgeInsets edge}) =>
       GestureDetector(
         onTap: () {
           launchURL(url);

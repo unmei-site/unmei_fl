@@ -1,29 +1,29 @@
 import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hydrated_bloc/hydrated_bloc.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:unmei_fl/presentation/app_route.dart';
+import 'package:flutter_redux/flutter_redux.dart';
+import 'package:redux/redux.dart';
+import 'package:unmei_fl/logic/redux/redux_state.dart';
+import 'package:unmei_fl/presentation/page/account_page.dart';
+import 'package:unmei_fl/presentation/page/home_page.dart';
 import 'package:unmei_fl/presentation/theme.dart';
-import 'file:///C:/Project/Flutter/unmei_fl/lib/presentation/page/home_page.dart';
+import 'package:unmei_fl/presentation/widget/news/news_item_widget.dart';
+import 'package:unmei_fl/presentation/widget/novels/novel_card_widget.dart';
 
-import 'logic/bloc/user/unmei_user_bloc.dart';
-import 'logic/cubit/news/unmei_news_cubit.dart';
-import 'logic/cubit/novels/unmei_novels_cubit.dart';
+import 'logic/redux/redux_reducers.dart';
 
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-
-  HydratedBloc.storage = await HydratedStorage.build(
-    storageDirectory: await getApplicationDocumentsDirectory(),
-  );
-
+void main() {
   runApp(App());
 }
 
 class App extends StatelessWidget {
-
-  final appRouter = AppRouter();
+  final Store<AppState> appStore = Store(
+    appReducer,
+    initialState: AppState(
+      news: NewsItemShimmer(),
+      novels: NovelCardShimmer(),
+      // user: AccountPage(),
+    ),
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -31,24 +31,13 @@ class App extends StatelessWidget {
       initial: AdaptiveThemeMode.light,
       light: lightTheme,
       dark: darkTheme,
-      builder: (light, dark) => MaterialApp(
-        theme: light,
-        darkTheme: dark,
-        debugShowCheckedModeBanner: false,
-        onGenerateRoute: appRouter.onGenerateRoute,
-        home: MultiBlocProvider(
-          providers: [
-            BlocProvider<UnmeiNewsCubit>(
-              create: (newsContext) => UnmeiNewsCubit(),
-            ),
-            BlocProvider<UnmeiNovelsCubit>(
-              create: (novelsContext) => UnmeiNovelsCubit(),
-            ),
-            BlocProvider<UnmeiUserBloc>(
-              create: (userContext) => UnmeiUserBloc(),
-            ),
-          ],
-          child: HomePage(),
+      builder: (light, dark) => StoreProvider<AppState>(
+        store: appStore,
+        child: MaterialApp(
+          theme: light,
+          darkTheme: dark,
+          debugShowCheckedModeBanner: false,
+          home: HomePage(),
         ),
       ),
     );

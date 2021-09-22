@@ -150,7 +150,7 @@ class _SettingsPageState extends State<SettingsPage> {
                           setState(() {
                             switchNotificationsBtn = !switchNotificationsBtn;
                           });
-                          showToast(context, "Еще не сделали 😢", Colors.red[900], Icons.cancel);
+                          showToast(context, "Еще не сделали 😢", (Colors.red[900])!, Icons.cancel);
                         }),
                     settingLine(label: "Какой-то переключатель"),
                   ],
@@ -163,7 +163,7 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 
-  settingLine({String label = "No label", IconData icon = Icons.cancel, ValueChanged<bool> onChanged}) =>
+  settingLine({String label = "No label", IconData icon = Icons.cancel, ValueChanged<bool>? onChanged}) =>
       Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -201,5 +201,5 @@ class ChartData {
   final double sectorValue;
   final Color color;
 
-  ChartData({this.value, this.sectorValue, this.color});
+  ChartData({required this.value, required this.sectorValue, required this.color});
 }

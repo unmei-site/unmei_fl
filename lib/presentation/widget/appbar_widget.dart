@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:unmei_fl/presentation/page/account_page.dart';
 
-appBar(BuildContext context, {String label = "PAGE"}) => AppBar(
+appBar(BuildContext context, {String label = "PAGE"}) {
+  return AppBar(
   leading: Container(
     margin: EdgeInsets.all(5),
     decoration: BoxDecoration(
@@ -26,4 +27,4 @@ appBar(BuildContext context, {String label = "PAGE"}) => AppBar(
   ),
   elevation: 0,
   centerTitle: true,
-);
+);}

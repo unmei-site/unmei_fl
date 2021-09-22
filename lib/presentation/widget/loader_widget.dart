@@ -5,15 +5,15 @@ class LoaderWidget extends StatefulWidget {
   final Widget child;
   final double boxSize;
   final Color indicatorColor;
-  final int duration;
+  final int durationAnim;
   final Function onRefresh;
 
   LoaderWidget({
-    this.child,
+    required this.child,
     this.boxSize = 150,
-    this.indicatorColor,
-    this.duration = 1,
-    this.onRefresh
+    required this.indicatorColor,
+    this.durationAnim = 1,
+    required this.onRefresh
   });
 
   @override
@@ -24,24 +24,28 @@ class _LoaderWidgetState extends State<LoaderWidget> with SingleTickerProviderSt
 
   bool _renderCompleteState = false;
 
+  final _helper = IndicatorStateHelper();
+
   @override
   Widget build(BuildContext context) {
     return CustomRefreshIndicator(
       offsetToArmed: widget.boxSize,
       onRefresh: () {
-        Future.delayed(Duration(seconds: widget.duration));
-        return widget.onRefresh();
+        return Future.delayed(Duration(seconds: widget.durationAnim), () {
+          return widget.onRefresh();
+        });
       },
       child: widget.child,
-      completeStateDuration: Duration(seconds: widget.duration),
+      completeStateDuration: Duration(seconds: widget.durationAnim),
       builder: (context, child, controller) {
         return Stack(
           children: [
             AnimatedBuilder(
               animation: controller,
               builder: (context, _) {
-                if (controller.didStateChange(to: IndicatorState.complete)) _renderCompleteState = true;
-                else if (controller.didStateChange(to: IndicatorState.idle)) _renderCompleteState = false;
+                _helper.update(controller.state);
+                if (_helper.didStateChange(to: IndicatorState.complete)) _renderCompleteState = true;
+                else if (_helper.didStateChange(to: IndicatorState.idle)) _renderCompleteState = false;
 
                 final containerHeight = controller.value * widget.boxSize;
 
