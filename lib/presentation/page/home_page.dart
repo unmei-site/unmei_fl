@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:unmei_fl/presentation/page/news_page.dart';
 import 'package:unmei_fl/presentation/page/novel_page.dart';
 import 'package:unmei_fl/presentation/page/settings_page.dart';
-import 'package:unmei_fl/presentation/widget/appbar_widget.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -21,7 +20,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBar(context, label: selectedItemParams()),
+      // appBar: appBar(context, label: selectedItemParams()),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
         items: _navBarsItems(),

@@ -1,214 +1,206 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:unmei_fl/data/model/novels_model.dart';
-import '../../../utils.dart';
+import 'package:unmei_fl/data/model/novels_item_model.dart';
 
 class NovelItemPage extends StatelessWidget {
-  final int id;
+  final NovelsItem novel;
 
-  NovelItemPage({required this.id});
+  NovelItemPage({required this.novel});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // body: novelsItemData.when(
-      //   data: (data) => itemBody(context, data.data),
-      //   loading: () => NovelCardShimmer(),
-      //   error: (err, trace) => onRequestException(err),
-      // ),
-    );
-  }
-
-  itemBody(context, NovelsData novelData) => ListView(
-    children: [
-      Container(
-        padding: EdgeInsets.symmetric(horizontal: 16),
-        color: Color(0xFFa338eb),
-        child: Column(
-          children: [
-            SizedBox(height: 16),
-            GestureDetector(
-              onTap: () => Navigator.pop(context),
-              child: Row(
-                children: [
-                  Icon(Icons.arrow_back, size: 18, color: Colors.white),
-                  SizedBox(width: 4),
-                  Text(
-                    "Назад",
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.white,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(height: 16),
-            ClipRRect(
-              borderRadius: BorderRadius.circular(16),
-              child: novelData.image.length > 10
-                  ? Image.network(novelData.image)
-                  : Image.asset("assets/images/no_image.png",
-              ),
-            ),
-            SizedBox(height: 16),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      body: ListView(
+        children: [
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 16),
+            color: Color(0xFFa338eb),
+            child: Column(
               children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      novelData.originalName,
-                      style: TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    ),
-                    Text(
-                      novelData.localizedName,
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ],
-                ),
-                Container(
-                  padding: EdgeInsets.all(4),
-                  decoration: BoxDecoration(
-                    color: Color(0xFFe3983d),
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(8),
-                      bottomRight: Radius.circular(8),
-                    ),
-                  ),
+                SizedBox(height: 16),
+                GestureDetector(
+                  // onTap: () => store.dispatch(loadNovelsThunk(store, "")),
                   child: Row(
                     children: [
-                      Icon(Icons.star, size: 22, color: Colors.white),
-                      SizedBox(width: 2),
+                      Icon(Icons.arrow_back, size: 18, color: Colors.white),
+                      SizedBox(width: 4),
                       Text(
-                        novelData.rating.toString(),
+                        "Назад",
                         style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
                           color: Colors.white,
                         ),
                       ),
                     ],
                   ),
                 ),
+                SizedBox(height: 16),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(16),
+                  child: novel.data!.image.length > 10
+                      ? Image.network(novel.data!.image)
+                      : Image.asset("assets/images/no_image.png",
+                  ),
+                ),
+                SizedBox(height: 16),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          novel.data!.originalName,
+                          style: TextStyle(
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                        Text(
+                          novel.data!.localizedName,
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Container(
+                      padding: EdgeInsets.all(4),
+                      decoration: BoxDecoration(
+                        color: Color(0xFFe3983d),
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(8),
+                          bottomRight: Radius.circular(8),
+                        ),
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(Icons.star, size: 22, color: Colors.white),
+                          SizedBox(width: 2),
+                          Text(
+                            novel.data!.rating.toString(),
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 16),
               ],
             ),
-            SizedBox(height: 16),
-          ],
-        ),
-      ),
-      SizedBox(height: 8),
-      Row(
-        children: [
-          Container(
-            padding: EdgeInsets.all(8),
-            margin: EdgeInsets.only(left: 8),
-            decoration: BoxDecoration(
-              color: Color(0xFF155ad1),
-              borderRadius: BorderRadius.only(
-                topRight: Radius.circular(8),
-                bottomLeft: Radius.circular(8),
-              ),
-            ),
-            child: Text(
-              "Краткая справка: ",
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
-            ),
           ),
-        ],
-      ),
-      SizedBox(height: 8),
-      Card(
-        elevation: 8,
-        margin: EdgeInsets.symmetric(horizontal: 16),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(16)),
-        ),
-        child: Container(
-          margin: EdgeInsets.all(8),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          SizedBox(height: 8),
+          Row(
             children: [
-              textStyle("Год выпуска: ", "${novelData.releaseDate != null ? setDateTimeYear(novelData.releaseDate) : ""}"),
-              genresConvert("Жанр: ", novelData.genres),
-              textStyle("Продолжительность: ", "${novelData.duration}"),
-              textStyle("Статус: ", "${statusConvert(novelData.exitStatus)}"),
-              textStyle("Платформы: ", "${novelData..platforms}"),
+              Container(
+                padding: EdgeInsets.all(8),
+                margin: EdgeInsets.only(left: 8),
+                decoration: BoxDecoration(
+                  color: Color(0xFF155ad1),
+                  borderRadius: BorderRadius.only(
+                    topRight: Radius.circular(8),
+                    bottomLeft: Radius.circular(8),
+                  ),
+                ),
+                child: Text(
+                  "Краткая справка: ",
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
             ],
           ),
-        ),
-      ),
-      SizedBox(height: 16),
-      Row(
-        children: [
-          Container(
-            padding: EdgeInsets.all(8),
-            margin: EdgeInsets.only(left: 8),
-            decoration: BoxDecoration(
-              color: Color(0xFFd12b15),
-              borderRadius: BorderRadius.only(
-                topRight: Radius.circular(8),
-                bottomLeft: Radius.circular(8),
-              ),
+          SizedBox(height: 8),
+          Card(
+            elevation: 8,
+            margin: EdgeInsets.symmetric(horizontal: 16),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(16)),
             ),
-            child: Text(
-              "Описание: ",
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
+            child: Container(
+              margin: EdgeInsets.all(8),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  textStyle("Год выпуска: ", "${novel.data!.releaseDate}"),
+                  genresConvert("Жанр: ", novel.data!.genres),
+                  textStyle("Продолжительность: ", "${novel.data!.duration}"),
+                  textStyle("Статус: ", "${statusConvert(novel.data!.exitStatus)}"),
+                  textStyle("Платформы: ", "${novel.data!..platforms}"),
+                ],
               ),
             ),
           ),
+          SizedBox(height: 16),
+          Row(
+            children: [
+              Container(
+                padding: EdgeInsets.all(8),
+                margin: EdgeInsets.only(left: 8),
+                decoration: BoxDecoration(
+                  color: Color(0xFFd12b15),
+                  borderRadius: BorderRadius.only(
+                    topRight: Radius.circular(8),
+                    bottomLeft: Radius.circular(8),
+                  ),
+                ),
+                child: Text(
+                  "Описание: ",
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 8),
+          Card(
+            elevation: 8,
+            margin: EdgeInsets.symmetric(horizontal: 16),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(16)),
+            ),
+            child: Container(
+              margin: EdgeInsets.all(16),
+              child: Text(
+                "${novel.data!.description}",
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.black,
+                ),
+              ),
+            ),
+          ),
+          SizedBox(height: 16),
         ],
       ),
-      SizedBox(height: 8),
-      Card(
-        elevation: 8,
-        margin: EdgeInsets.symmetric(horizontal: 16),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(16)),
-        ),
-        child: Container(
-          margin: EdgeInsets.all(16),
-          child: Text(
-            "${novelData.description}",
-            style: TextStyle(
-              fontSize: 16,
-              color: Colors.black,
-            ),
-          ),
-        ),
-      ),
-      SizedBox(height: 16),
-    ],
-  );
+    );
+  }
 
   Widget platformConvert(String text) {
     List<Widget> asset = [];
     var listTypes = ["win", "linux", "ios", "android"];
     for (var i in listTypes)
-      if (text.allMatches(i, 0) != null)
-        asset.add(Container(
-            margin: EdgeInsets.symmetric(horizontal: 2),
-            child: SvgPicture.asset(
-              "assets/icons/platform/$i.svg",
-              height: 16,
-              color: Colors.white,
-            )));
+      asset.add(Container(
+          margin: EdgeInsets.symmetric(horizontal: 2),
+          child: SvgPicture.asset(
+            "assets/icons/platform/$i.svg",
+            height: 16,
+            color: Colors.white,
+          )));
     return Row(children: asset);
   }
 

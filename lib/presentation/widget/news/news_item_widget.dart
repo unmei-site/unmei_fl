@@ -1,33 +1,31 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_redux/flutter_redux.dart';
-import 'package:redux/redux.dart';
+import 'package:flutter_riverpod/all.dart';
 import 'package:unmei_fl/data/model/news_model.dart';
-import 'package:unmei_fl/logic/redux/redux_actions.dart';
-import 'package:unmei_fl/logic/redux/redux_state.dart';
+import 'package:unmei_fl/logic/riverprod/river_providers.dart';
 import 'package:unmei_fl/presentation/widget/utils_widget.dart';
 
 import '../../../utils.dart';
 import '../loader_widget.dart';
 
-class NewsItem extends StatelessWidget {
-  final News newsList;
+class NewsItem extends ConsumerWidget {
 
-  const NewsItem({required this.newsList});
+  final List<NewsData>? newsList;
+
+  NewsItem({this.newsList});
 
   @override
-  Widget build(BuildContext context) {
-    final Store<AppState> store = StoreProvider.of<AppState>(context);
+  Widget build(BuildContext context, ScopedReader watch) {
     return LoaderWidget(
       indicatorColor: Color(0xFF3f85ff),
       onRefresh: () {
         Future.delayed(Duration(milliseconds: 1500), () {
-          return store.dispatch(loadNovelsThunk(store));
+          return context.refresh(newsProvider);
         });
       },
       child: Container(
         color: Colors.grey[100],
         child: ListView.builder(
-          itemCount: newsList.data!.length,
+          itemCount: newsList!.length,
           itemBuilder: (context, index) => Container(
             margin: EdgeInsets.only(top: 16, right: 16, left: 16),
             padding: EdgeInsets.all(8),
@@ -52,7 +50,7 @@ class NewsItem extends StatelessWidget {
                           Icon(Icons.account_circle, size: 18, color: Color(0xFF3f85ff)),
                           SizedBox(width: 4),
                           Text(
-                            "${newsList.data![index].author}",
+                            "${newsList![index].author}",
                             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Color(0xFF3f85ff)),
                           ),
                         ],
@@ -61,14 +59,14 @@ class NewsItem extends StatelessWidget {
                   ],
                 ),
                 Text(
-                  "${newsList.data![index].title}",
+                  "${newsList![index].title}",
                   style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.white),
                 ),
                 SizedBox(height: 8),
                 Container(
                   margin: EdgeInsets.only(left: 8),
                   child: Text(
-                    "${newsList.data![index].shortPost}",
+                    "${newsList![index].shortPost}",
                     style: TextStyle(fontSize: 12, color: Colors.white),
                   ),
                 ),
@@ -86,7 +84,7 @@ class NewsItem extends StatelessWidget {
                           Icon(Icons.date_range, size: 18, color: Color(0xFF3f85ff)),
                           SizedBox(width: 4),
                           Text(
-                            "${setDateTimeFull(newsList.data![index].date, 3)}",
+                            "${setDateTimeFull(newsList![index].date, 3)}",
                             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Color(0xFF3f85ff)),
                           ),
                         ],

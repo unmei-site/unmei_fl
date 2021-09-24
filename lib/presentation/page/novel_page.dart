@@ -1,22 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_redux/flutter_redux.dart';
-import 'package:redux/redux.dart';
-import 'package:unmei_fl/logic/redux/redux_actions.dart';
-import 'package:unmei_fl/logic/redux/redux_state.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:unmei_fl/data/api/exceptions.dart';
+import 'package:unmei_fl/logic/riverprod/river_providers.dart';
+import 'package:unmei_fl/presentation/widget/novels/novel_card_widget.dart';
 
-class NovelsPage extends StatelessWidget {
+class NovelsPage extends ConsumerWidget {
 
   @override
-  Widget build(BuildContext context) {
-    final Store<AppState> store = StoreProvider.of<AppState>(context);
+  Widget build(BuildContext context, ScopedReader watch) {
+    final novels = watch(novelsProvider(""));
     return Scaffold(
       backgroundColor: Colors.grey[100],
-      body: StoreConnector<AppState, AppState>(
-        converter: (store) => store.state,
-        onInit: (_) => store.dispatch(loadApp(store, "")),
-        builder: (context, vm) {
-          return vm.novels;
-        },
+      body: novels.when(
+        data: (content) => NovelCard(novels: content.data),
+        loading: () => NovelCardShimmer(),
+        error: (err, trace) => onRequestException(err),
       ),
     );
   }
