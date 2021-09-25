@@ -21,15 +21,22 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       // appBar: appBar(context, label: selectedItemParams()),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _selectedIndex,
-        items: _navBarsItems(),
-        selectedItemColor: Color(int.parse(selectedItemParams(choose: "color"))),
-        onTap: (index) {
-          setState(() {
-            _selectedIndex = index;
-          });
-        },
+      bottomNavigationBar: ClipRRect(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(8),
+          topRight: Radius.circular(8),
+        ),
+        child: BottomNavigationBar(
+          currentIndex: _selectedIndex,
+          items: _navBarsItems(),
+          selectedItemColor: Colors.white,
+          backgroundColor: Color(int.parse(selectedItemParams(choose: "color"))),
+          onTap: (index) {
+            setState(() {
+              _selectedIndex = index;
+            });
+          },
+        ),
       ),
       body: _buildScreens().elementAt(_selectedIndex),
     );
@@ -38,11 +45,11 @@ class _HomePageState extends State<HomePage> {
   String selectedItemParams({String choose = "name"}) {
     String name = "";
     switch (_selectedIndex) {
-      case 0: name = choose == "color" ? "0xFF3f85ff" : "Новости";
+      case 0: name = choose == "color" ? "0xFF7AB9FF" : "Новости";
         break;
-      case 1: name = choose == "color" ? "0xFFa338eb" : "Новеллы";
+      case 1: name = choose == "color" ? "0xFFE864FB" : "Новеллы";
         break;
-      case 2: name = choose == "color" ? "0xFFeb3838" : "Настройки";
+      case 2: name = choose == "color" ? "0xFFFB6464" : "Настройки";
         break;
     }
     return name;
@@ -61,17 +68,14 @@ class _HomePageState extends State<HomePage> {
       BottomNavigationBarItem(
         icon: Icon(Icons.home),
         label: ("Главная"),
-        backgroundColor: Color(0xFF3f85ff),
       ),
       BottomNavigationBarItem(
         icon: Icon(Icons.my_library_books),
         label: ("Новеллы"),
-        backgroundColor: Color(0xFFa338eb),
       ),
       BottomNavigationBarItem(
-        icon: Icon(Icons.settings),
+        icon: Icon(Icons.manage_accounts),
         label: ("Настройки"),
-        backgroundColor: Color(0xFFeb3838),
       ),
     ];
   }
