@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 
 onBoxShim({
-  double height = 40,
-  double width = 40,
+  double? height,
+  double? width,
   EdgeInsets margin = const EdgeInsets.all(0),
   double radius = 0,
   Color bodyColor = const Color(0xFFB3B3B3),

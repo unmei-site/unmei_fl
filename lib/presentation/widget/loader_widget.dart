@@ -49,29 +49,32 @@ class _LoaderWidgetState extends State<LoaderWidget> with SingleTickerProviderSt
 
                 final containerHeight = controller.value * widget.boxSize;
 
-                return Container(
-                  alignment: Alignment.center,
-                  height: containerHeight,
-                  child: OverflowBox(
-                    maxHeight: 40,
-                    minHeight: 40,
-                    maxWidth: 40,
-                    minWidth: 40,
+                return Opacity(
+                  opacity: controller.value.clamp(0.0, 1.0),
+                  child: Container(
                     alignment: Alignment.center,
-                    child: AnimatedContainer(
-                      duration: Duration(milliseconds: 150),
+                    height: containerHeight,
+                    child: OverflowBox(
+                      maxHeight: 40,
+                      minHeight: 40,
+                      maxWidth: 40,
+                      minWidth: 40,
                       alignment: Alignment.center,
-                      child: _renderCompleteState ? Icon(Icons.check, color: Colors.white) : SizedBox(
-                        height: 30,
-                        width: 30,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                          valueColor: AlwaysStoppedAnimation(Colors.white),
-                          value: controller.isDragging || controller.isArmed ? controller.value.clamp(0.0, 1.0) : null,
+                      child: AnimatedContainer(
+                        duration: Duration(milliseconds: 150),
+                        alignment: Alignment.center,
+                        child: _renderCompleteState ? Icon(Icons.check, color: Colors.white) : SizedBox(
+                          height: 30,
+                          width: 30,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            valueColor: AlwaysStoppedAnimation(Colors.white),
+                            value: controller.isDragging || controller.isArmed ? controller.value.clamp(0.0, 1.0) : null,
+                          ),
                         ),
-                      ),
-                      decoration: BoxDecoration(color: _renderCompleteState ? widget.indicatorColor : Colors.black,
-                        shape: BoxShape.circle,
+                        decoration: BoxDecoration(color: _renderCompleteState ? widget.indicatorColor : Colors.black,
+                          shape: BoxShape.circle,
+                        ),
                       ),
                     ),
                   ),
