@@ -8,6 +8,7 @@ import 'package:unmei_fl/presentation/widget/utils_widget.dart';
 import 'package:unmei_fl/utils.dart';
 
 class NewsPage extends ConsumerWidget {
+
   @override
   Widget build(BuildContext context, ScopedReader watch) {
     final news = watch(newsProvider);
@@ -21,8 +22,7 @@ class NewsPage extends ConsumerWidget {
             bottomRight: Radius.circular(8),
           ),
         ),
-        title: Text("Новости",
-            style: TextStyle(fontSize: 32, color: Colors.black)),
+        title: Text("Новости", style: TextStyle(fontSize: 32, color: Colors.black)),
       ),
       body: Column(
         children: [

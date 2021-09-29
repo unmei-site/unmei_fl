@@ -10,52 +10,28 @@ class NovelsPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, ScopedReader watch) {
-    final novels = watch(novelsProvider(""));
+    final novels = watch(novelsProvider);
     return Scaffold(
       backgroundColor: Colors.grey[100],
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+            bottomLeft: Radius.circular(8),
+            bottomRight: Radius.circular(8),
+          ),
+        ),
+        title: Text("Новеллы", style: TextStyle(fontSize: 32, color: Colors.black)),
+      ),
       body: Column(
         children: [
-          headerItem(context, watch),
+          SizedBox(height: 8),
+          searchItem(context, watch),
+          SizedBox(height: 8),
           novels.when(
             data: (content) => buildNovelItem(context, content.data),
             loading: () => buildNovelItemShimmer(),
             error: (err, trace) => onRequestException(err),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget headerItem(BuildContext context, ScopedReader watch) {
-    final Shader linearGradient = LinearGradient(
-      colors: <Color>[Color(0xFFFFFFFF), Color(0xfffddaff)],
-    ).createShader(Rect.fromLTWH(0.0, 0.0, 200.0, 70.0));
-    return Container(
-      padding: EdgeInsets.only(bottom: 42),
-      child: Stack(
-        clipBehavior: Clip.none,
-        alignment: Alignment.center,
-        children: [
-          ClipRRect(
-            borderRadius: BorderRadius.only(
-              bottomLeft: Radius.circular(16),
-              bottomRight: Radius.circular(16),
-            ),
-            child: Image.asset("assets/images/novel_top.jpg"),
-          ),
-          Text(
-            "Новеллы",
-            style: TextStyle(
-              fontSize: 50,
-              fontWeight: FontWeight.bold,
-              // fontStyle: FontStyle.italic,
-              foreground: Paint()..shader = linearGradient,
-            ),
-          ),
-          Positioned(
-            bottom: -25,
-            width: MediaQuery.of(context).size.width - 32,
-            child: searchItem(context, watch),
           ),
         ],
       ),
@@ -86,158 +62,202 @@ class NovelsPage extends ConsumerWidget {
       controller: watch(searchControllerNovelsProvider).state,
       onTap: () => context.read(searchControllerNovelsProvider).state.clear(),
       onEditingComplete: () {
-        context.read(novelsProvider(query));
+        context.read(stateNotifierProvider.notifier).onSearchNovel(query);
         FocusScope.of(context).unfocus();
       },
     );
   }
 
-  Widget buildNovelItem(BuildContext context, List<NovelsData>? novels) => Expanded(
-    child: LoaderWidget(
-      indicatorColor: Color(0xFF9915d1),
-      boxSize: 150,
-      onRefresh: () {
-        Future.delayed(Duration(milliseconds: 1500), () {
-          return context.refresh(novelsProvider(""));
-        });
-      },
-      child: ListView.builder(
-        itemCount: novels!.length,
-        padding: EdgeInsets.all(0),
-        itemBuilder: (context, index) => Container(
-          margin: EdgeInsets.only(
-            top: index == 0 ? 0 : 16,
-            right: 16,
-            left: 16,
-            bottom: index == novels.length - 1 ? 16 : 0,
-          ),
-          padding: EdgeInsets.all(8),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(8)),
-            color: Color(0xFFa338eb),
-          ),
-          child: GestureDetector(
-            onTap: () {
-              print("GOTO");
-              // store.dispatch(loadNovelsItemThunk(store, novels.data![index].id));
-            },
-            child: Row(
-              children: [
-                Expanded(
-                  child: Stack(
-                    children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(8),
-                        child: Container(
-                          child: novels[index].image.length > 10
-                              ? Image.network(novels[index].image)
-                              : Image.asset("assets/images/no_image.png"),
-                        ),
-                      ),
-                      Row(
-                        children: [
-                          Container(
-                            padding: EdgeInsets.all(4),
+  Widget buildNovelItem(BuildContext context, List<NovelsData>? novels) =>
+      Expanded(
+        child: LoaderWidget(
+          indicatorColor: Color(0xFF9915d1),
+          boxSize: 150,
+          onRefresh: () {
+            Future.delayed(Duration(milliseconds: 1500), () {
+              return context.refresh(novelsProvider);
+            });
+          },
+          child: GridView.builder(
+            itemCount: novels!.length,
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+            itemBuilder: (context, index) => Container(
+              margin: EdgeInsets.only(
+                top: index == 0 && index == 1 ? 0 : 8,
+                left: index % 2 == 0 ? 8 : 8,
+                right: index % 2 == 0 ? 0 : 8,
+                bottom: index == novels.length - 1 && index == novels.length - 2 ? 8 : 0,
+              ),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.all(Radius.circular(8)),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black12,
+                    blurRadius: 2.0,
+                    spreadRadius: 2.0,
+                    offset: Offset(2.0, 2.0),
+                  )
+                ],
+              ),
+              child: GestureDetector(
+                onTap: () {
+                  print("GOTO");
+                  context.read(databaseNovelsProvider).initNovelsItem(index);
+                  // store.dispatch(loadNovelsItemThunk(store, novels.data![index].id));
+                },
+                child: Column(
+                  children: [
+                    Stack(
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(8),
+                            topRight: Radius.circular(8),
+                          ),
+                          child: Container(
                             decoration: BoxDecoration(
-                              color: Color(0xFFe3983d),
-                              borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(8),
-                                bottomRight: Radius.circular(8),
-                              ),
+                              border: Border(bottom: BorderSide(width: 1)),
                             ),
-                            child: Row(
-                              children: [
-                                Icon(
-                                  Icons.star,
-                                  size: 14,
-                                  color: Colors.white,
+                            child: Image.network(novels[index].image),
+                          ),
+                        ),
+                        Row(
+                          children: [
+                            Container(
+                              padding: EdgeInsets.all(4),
+                              decoration: BoxDecoration(
+                                color: Color(0xFFe3983d),
+                                borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(8),
+                                  bottomRight: Radius.circular(8),
                                 ),
-                                SizedBox(width: 2),
-                                Text(
-                                  novels[index].rating.toString(),
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.bold,
+                              ),
+                              child: Row(
+                                children: [
+                                  Icon(
+                                    Icons.star,
+                                    size: 14,
                                     color: Colors.white,
                                   ),
-                                ),
-                              ],
+                                  SizedBox(width: 2),
+                                  Text(
+                                    novels[index].rating.toString(),
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-                Expanded(
-                  child: Container(
-                    margin: EdgeInsets.symmetric(horizontal: 8),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text(
-                          novels[index].originalName,
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
-                        ),
-                        Text(
-                          novels[index].localizedName.length > 1
-                              ? novels[index].localizedName
-                              : "no name",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: Colors.white,
-                          ),
+                          ],
                         ),
                       ],
                     ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    ),
-  );
-
-  Widget buildNovelItemShimmer() => Expanded(
-    child: ListView.builder(
-      itemCount: 10,
-      padding: EdgeInsets.all(0),
-      itemBuilder: (context, index) => Card(
-        margin: EdgeInsets.only(
-          top: index == 0 ? 0 : 16,
-          left: 16,
-          right: 16,
-          bottom: index == 9 ? 16 : 0,
-        ),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(8))),
-        child: Container(
-          height: 100,
-          child: Row(
-            children: [
-              Expanded(
-                child: onBoxShim(margin: EdgeInsets.all(8), radius: 8),
-              ),
-              Expanded(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    onBoxShim(height: 25, width: 120, radius: 16),
-                    onBoxShim(height: 20, width: 140, radius: 16),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Container(
+                                margin: EdgeInsets.only(top: 8, left: 8),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      novels[index].localizedName.length > 1
+                                          ? novels[index].localizedName
+                                          : "no name",
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                    Text(
+                                      novels[index].originalName,
+                                      style: TextStyle(
+                                        fontSize: 10,
+                                        color: Color(0xFF263238),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        // TextButton(
+                        //   onPressed: () => print("GO TO"),
+                        //   style: ButtonStyle(
+                        //     shape: MaterialStateProperty.all(
+                        //       RoundedRectangleBorder(
+                        //         side: BorderSide(width: 1, color: Color(0xFF0E4DA4)),
+                        //         borderRadius: BorderRadius.all(Radius.circular(8)),
+                        //       ),
+                        //     ),
+                        //     padding: MaterialStateProperty.all(EdgeInsets.all(0)),
+                        //     overlayColor: MaterialStateProperty.all(Color(0xFFC7DBFF)),
+                        //     backgroundColor: MaterialStateProperty.all(Colors.white),
+                        //   ),
+                        //   child: Text("Подробнее", style: TextStyle(fontSize: 8, color: Color(0xFF0E4DA4))),
+                        // ),
+                      ],
+                    ),
+                    // GestureDetector(
+                    //   onTap: () => print("GO TO"),
+                    //   child: Container(
+                    //     padding: EdgeInsets.all(8),
+                    //     decoration: BoxDecoration(
+                    //       borderRadius: BorderRadius.all(Radius.circular(8)),
+                    //       border: Border.all(width: 1, color: Color(0xFF0E4DA4)),
+                    //     ),
+                    //     child: Text("Подробнее", style: TextStyle(fontSize: 10, color: Color(0xFF0E4DA4))),
+                    //   ),
+                    // ),
                   ],
                 ),
               ),
-            ],
+            ),
           ),
         ),
-      ),
-    ),
-  );
+      );
+
+  Widget buildNovelItemShimmer() => Expanded(
+        child: GridView.builder(
+          itemCount: 14,
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+          padding: EdgeInsets.all(0),
+          itemBuilder: (context, index) => Card(
+            margin: EdgeInsets.only(
+              top: index == 0 && index == 1 ? 0 : 8,
+              left: index % 2 == 0 ? 8 : 8,
+              right: index % 2 == 0 ? 0 : 8,
+              bottom: index == 13 && index == 12 ? 8 : 0,
+            ),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(8))),
+            child: Container(
+              height: 100,
+              child: Column(
+                children: [
+                  Expanded(
+                    child: onBoxShim(margin: EdgeInsets.all(8), radius: 8),
+                  ),
+                  Expanded(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        onBoxShim(height: 25, width: 120, radius: 16),
+                        onBoxShim(height: 20, width: 140, radius: 16),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
 }
